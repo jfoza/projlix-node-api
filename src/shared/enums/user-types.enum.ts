@@ -1,0 +1,4 @@
+export enum UserTypesEnum {
+  ADMINISTRATIVE = 'ADMINISTRATIVE',
+  OPERATIONAL = 'OPERATIONAL',
+}
