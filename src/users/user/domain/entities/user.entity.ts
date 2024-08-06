@@ -4,6 +4,7 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -11,6 +12,7 @@ import {
 import { AdminUserEntity } from '@/users/admin-user/domain/entities/admin-user.entity';
 import { ProfileEntity } from '@/users/profiles/domain/entities/profile.entity';
 import { IUserEntity } from '@/users/user/interfaces/entities/user-entity.interface';
+import { AuthEntity } from '@/auth/domain/entities/auth.entity';
 
 @Entity({ schema: 'user_conf', name: 'users' })
 export class UserEntity implements IUserEntity {
@@ -50,4 +52,7 @@ export class UserEntity implements IUserEntity {
     (admin_user: AdminUserEntity) => admin_user.user,
   )
   admin_user: AdminUserEntity;
+
+  @OneToMany(() => AuthEntity, (auth: AuthEntity) => auth.user)
+  auth: AuthEntity[];
 }

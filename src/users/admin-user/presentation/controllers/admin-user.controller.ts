@@ -7,6 +7,7 @@ import {
   Inject,
   ParseUUIDPipe,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 import { IAdminUserListService } from '@/users/admin-user/interfaces/services/admin-user-list.service.interface';
 import { IUserEntity } from '@/users/user/interfaces/entities/user-entity.interface';
@@ -15,7 +16,9 @@ import { CreateAdminUserDto } from '@/users/admin-user/presentation/dto/create-a
 import { IAdminUserCreateService } from '@/users/admin-user/interfaces/services/admin-user-create.service.interface';
 import { IAdminUserUpdateService } from '@/users/admin-user/interfaces/services/admin-user-update.service.interface';
 import { UpdateAdminUserDto } from '@/users/admin-user/presentation/dto/update-admin-user.dto';
+import { AuthGuard } from '@/auth/config/auth.guard';
 
+@UseGuards(AuthGuard)
 @Controller('admin-users')
 export class AdminUserController {
   @Inject('IAdminUserListService')

@@ -29,7 +29,10 @@ export class UserRepository implements IUserRepository {
   }
 
   async findByEmail(email: string): Promise<IUserEntity> {
-    return this.typeOrmRepository.findOne({ where: { email } });
+    return this.typeOrmRepository.findOne({
+      where: { email },
+      relations: ['profile'],
+    });
   }
 
   async findById(id: string): Promise<UserEntity> {

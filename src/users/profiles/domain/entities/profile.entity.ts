@@ -3,6 +3,8 @@ import {
   CreateDateColumn,
   Entity,
   JoinColumn,
+  JoinTable,
+  ManyToMany,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -11,6 +13,7 @@ import {
 import { ProfileTypesEntity } from '@/users/profiles/domain/entities/profile-types.entity';
 import { UserEntity } from '@/users/user/domain/entities/user.entity';
 import { IProfileEntity } from '@/users/profiles/interfaces/entities/profile.entity.interface';
+import { RuleEntity } from '@/users/rule/domain/entities/rule.entity';
 
 @Entity({ schema: 'user_conf', name: 'profiles' })
 export class ProfileEntity implements IProfileEntity {
@@ -44,4 +47,21 @@ export class ProfileEntity implements IProfileEntity {
 
   @OneToMany(() => UserEntity, (user) => user.profile)
   users: UserEntity[];
+
+  @JoinTable({
+    schema: 'user_conf',
+    name: 'profiles_rules',
+    joinColumn: {
+      name: 'profile_id',
+      referencedColumnName: 'id',
+    },
+    inverseJoinColumn: {
+      name: 'rule_id',
+      referencedColumnName: 'id',
+    },
+  })
+  @ManyToMany(() => RuleEntity, (rule: RuleEntity) => rule.profiles, {
+    cascade: true,
+  })
+  rules: RuleEntity[];
 }
