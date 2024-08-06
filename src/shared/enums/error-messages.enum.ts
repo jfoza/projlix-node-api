@@ -1,4 +1,5 @@
 export enum ErrorMessagesEnum {
-  USER_NOT_FOUND = 'User not found.',
-  EMAIL_ALREADY_EXISTS = 'Email already exists.',
+  NOT_AUTHORIZED = 'Você não tem permissão para acessar este recurso.',
+  USER_NOT_FOUND = 'Usuário não encontrado',
+  EMAIL_ALREADY_EXISTS = 'Este e-mal já existe.',
 }

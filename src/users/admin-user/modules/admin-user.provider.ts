@@ -7,6 +7,7 @@ import { AdminUserListByIdUseCase } from '@/users/admin-user/application/use-cas
 import { AdminUserCreateUseCase } from '@/users/admin-user/application/use-cases/admin-user-create.use-case';
 import { Provider } from '@nestjs/common';
 import { AdminUserUpdateService } from '@/users/admin-user/presentation/services/admin-user-update.service';
+import { createServiceProvider } from '@/base/modules/service.provider';
 
 export const adminUserProvider: ProvidersType = {
   repositoryProviders: [
@@ -19,25 +20,19 @@ export const adminUserProvider: ProvidersType = {
 
   serviceProviders: [
     AdminUserListService,
-    {
-      provide: 'IAdminUserListService',
-      useExisting: AdminUserListService,
-    },
+    createServiceProvider('IAdminUserListService', AdminUserListService),
+
     AdminUserListByIdService,
-    {
-      provide: 'IAdminUserListByIdService',
-      useExisting: AdminUserListByIdService,
-    },
+    createServiceProvider(
+      'IAdminUserListByIdService',
+      AdminUserListByIdService,
+    ),
+
     AdminUserCreateService,
-    {
-      provide: 'IAdminUserCreateService',
-      useExisting: AdminUserCreateService,
-    },
+    createServiceProvider('IAdminUserCreateService', AdminUserCreateService),
+
     AdminUserUpdateService,
-    {
-      provide: 'IAdminUserUpdateService',
-      useExisting: AdminUserUpdateService,
-    },
+    createServiceProvider('IAdminUserUpdateService', AdminUserUpdateService),
   ],
 
   useCaseProviders: [

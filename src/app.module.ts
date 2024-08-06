@@ -5,6 +5,7 @@ import { UserModule } from '@/users/user/modules/user.module';
 import { AdminUserModule } from '@/users/admin-user/modules/admin-user.module';
 import { ProfileModule } from '@/users/profiles/modules/profiles.module';
 import { AppController } from '@/app.controller';
+import { AclModule } from './acl/modules/acl.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { AppController } from '@/app.controller';
     UserModule,
     AdminUserModule,
     ProfileModule,
+    AclModule,
   ],
   controllers: [AppController],
   providers: [],
