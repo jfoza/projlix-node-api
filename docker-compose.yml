@@ -1,0 +1,23 @@
+version: "3.9"
+
+networks:
+  traefik_network:
+    external: true
+
+services:
+
+  app-dev:
+    container_name: projlix-node-api-app-dev
+    build:
+      context: .
+      dockerfile: docker/node/Dockerfile
+    image: projlix-node-api-app-dev
+    volumes:
+      - .:/var/www/html
+    networks:
+      - traefik_network
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.projlix-node-api-app-dev.rule=Host(`projlix-node-api.docker.localhost`)"
+      - "traefik.http.services.projlix-node-api-app-dev.loadbalancer.server.port=3000"
+      - "traefik.http.routers.projlix-node-api-app-dev.tls=true"
