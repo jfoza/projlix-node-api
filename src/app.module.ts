@@ -8,16 +8,18 @@ import { AppController } from '@/app.controller';
 import { AclModule } from './acl/modules/acl.module';
 import { AuthModule } from './auth/modules/auth.module';
 import { RuleModule } from './users/rule/modules/rule.module';
+import { RedisModule } from '@/redis/modules/redis.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
     DatabaseModule,
+    RedisModule,
+    AclModule,
+    AuthModule,
     UserModule,
     AdminUserModule,
     ProfileModule,
-    AclModule,
-    AuthModule,
     RuleModule,
   ],
   controllers: [AppController],

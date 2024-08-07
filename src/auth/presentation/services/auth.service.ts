@@ -27,11 +27,14 @@ export class AuthService implements IAuthService {
   private authDto: AuthDto;
   private user: IUserEntity;
 
-  constructor(
-    private readonly jwtService: JwtService,
-    private readonly configService: ConfigService,
-    private readonly response: AuthResponse,
-  ) {}
+  @Inject(JwtService)
+  private readonly jwtService: JwtService;
+
+  @Inject(ConfigService)
+  private readonly configService: ConfigService;
+
+  @Inject(AuthResponse)
+  private readonly response: AuthResponse;
 
   async handle(authDto: AuthDto): Promise<AuthResponse> {
     this.authDto = authDto;
