@@ -37,4 +37,16 @@ export class RedisService {
   public async invalidate(key: string): Promise<void> {
     await this.client.del(key);
   }
+
+  public async invalidateByPattern(pattern: string): Promise<void> {
+    this.client.keys(pattern, (err, keys) => {
+      if (err) throw err;
+
+      if (keys.length > 0) {
+        this.client.del(keys, (err) => {
+          if (err) throw err;
+        });
+      }
+    });
+  }
 }

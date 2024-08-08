@@ -8,14 +8,14 @@ import {
   Req,
 } from '@nestjs/common';
 import { AuthDto } from '@/auth/presentation/dto/auth.dto';
-import { IAuthService } from '@/auth/interfaces/services/auth.service.interface';
 import { Request } from 'express';
 import { AuthResponse } from '@/auth/types/auth.response.type';
+import { ILoginService } from '@/auth/interfaces/services/login.service.interface';
 
 @Controller('auth')
 export class AuthController {
-  @Inject('IAuthService')
-  private readonly authService: IAuthService;
+  @Inject('ILoginService')
+  private readonly authService: ILoginService;
 
   @Post('login')
   @HttpCode(HttpStatus.OK)

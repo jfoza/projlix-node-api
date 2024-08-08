@@ -5,16 +5,19 @@ import { AuthDto } from '@/auth/presentation/dto/auth.dto';
 import { IUserEntity } from '@/users/user/interfaces/entities/user-entity.interface';
 import { IUserRepository } from '@/users/user/interfaces/repositories/user.repository.interface';
 import { Hash } from '@/shared/utils/hash';
-import { IAuthService } from '@/auth/interfaces/services/auth.service.interface';
 import { IAuthRepository } from '@/auth/interfaces/repositories/auth.repository.interface';
 import { AuthResponse } from '@/auth/types/auth.response.type';
 import moment from 'moment';
 import { UserTypesEnum } from '@/shared/enums/auth-types.enum';
 import { IRuleRepository } from '@/users/rule/interfaces/repositories/rule.repository.interface';
 import { IRuleEntity } from '@/users/rule/interfaces/entities/rule.entity.interface';
+import { ILoginService } from '@/auth/interfaces/services/login.service.interface';
 
 @Injectable()
-export class AuthService implements IAuthService {
+export class LoginService implements ILoginService {
+  private authDto: AuthDto;
+  private user: IUserEntity;
+
   @Inject('IUserRepository')
   private readonly userRepository: IUserRepository;
 
@@ -23,9 +26,6 @@ export class AuthService implements IAuthService {
 
   @Inject('IRuleRepository')
   private readonly ruleRepository: IRuleRepository;
-
-  private authDto: AuthDto;
-  private user: IUserEntity;
 
   @Inject(JwtService)
   private readonly jwtService: JwtService;
@@ -59,7 +59,7 @@ export class AuthService implements IAuthService {
   }
 
   private async generateAuth(): Promise<void> {
-    const payload = { sub: this.user.id, email: this.user.email };
+    const payload = { sub: this.user.id, user: this.user };
 
     const token: string = this.jwtService.sign(payload);
 

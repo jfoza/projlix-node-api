@@ -3,7 +3,7 @@ import { IAdminUserListService } from '@/users/admin-user/interfaces/services/ad
 import { IAdminUserRepository } from '@/users/admin-user/interfaces/repositories/admin-user.repository.interface';
 import { IUserEntity } from '@/users/user/interfaces/entities/user-entity.interface';
 import { Service } from '@/base/presentation/services/service';
-import { RedisService } from '@/redis/presentation/services/redis.service';
+import { RulesEnum } from '@/shared/enums/rules.enum';
 
 @Injectable()
 export class AdminUserListService
@@ -13,14 +13,9 @@ export class AdminUserListService
   @Inject('IAdminUserRepository')
   private readonly adminUserRepository: IAdminUserRepository;
 
-  @Inject(RedisService)
-  private readonly redis: RedisService;
-
   async handle(): Promise<IUserEntity[]> {
-    this.getPolicy().canValidate('RULE_1');
+    this.getPolicy().canValidate(RulesEnum.ADMIN_USERS_VIEW);
 
-    return await this.redis.remember('ADMIN_USER', () => {
-      return this.adminUserRepository.findAll();
-    });
+    return this.adminUserRepository.findAll();
   }
 }

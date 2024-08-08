@@ -1,6 +1,5 @@
-import { Module } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { AuthService } from '@/auth/presentation/services/auth.service';
 import { AuthController } from '@/auth/presentation/controllers/auth.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserEntity } from '@/users/user/domain/entities/user.entity';
@@ -10,6 +9,7 @@ import { AuthRepository } from '@/auth/domain/repositories/auth.repository';
 import { AuthEntity } from '@/auth/domain/entities/auth.entity';
 import { AuthResponse } from '@/auth/types/auth.response.type';
 import { RuleModule } from '@/users/rule/modules/rule.module';
+import { LoginService } from '@/auth/presentation/services/login.service';
 
 @Module({
   imports: [
@@ -33,8 +33,8 @@ import { RuleModule } from '@/users/rule/modules/rule.module';
     AuthRepository,
     { provide: 'IAuthRepository', useExisting: AuthRepository },
 
-    AuthService,
-    { provide: 'IAuthService', useExisting: AuthService },
+    LoginService,
+    { provide: 'ILoginService', useExisting: LoginService },
   ],
   controllers: [AuthController],
 })

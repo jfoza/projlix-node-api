@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { DatabaseModule } from '@/database/modules/database.module';
 import { UserModule } from '@/users/user/modules/user.module';
@@ -9,12 +9,15 @@ import { AclModule } from './acl/modules/acl.module';
 import { AuthModule } from './auth/modules/auth.module';
 import { RuleModule } from './users/rule/modules/rule.module';
 import { RedisModule } from '@/redis/modules/redis.module';
+import { JwtMiddleware } from '@/jwt/jwt.middleware';
+import { JwtModule } from '@/jwt/jwt.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
     DatabaseModule,
     RedisModule,
+    JwtModule,
     AclModule,
     AuthModule,
     UserModule,
@@ -23,6 +26,9 @@ import { RedisModule } from '@/redis/modules/redis.module';
     RuleModule,
   ],
   controllers: [AppController],
-  providers: [],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(JwtMiddleware).forRoutes('*');
+  }
+}

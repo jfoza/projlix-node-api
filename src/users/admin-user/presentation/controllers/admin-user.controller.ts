@@ -54,7 +54,7 @@ export class AdminUserController {
   update(
     @Param('id') id: string,
     @Body() updateAdminUserDto: UpdateAdminUserDto,
-  ) {
+  ): Promise<IUserEntity> {
     return this.adminUserUpdateService.handle(id, updateAdminUserDto);
   }
 }

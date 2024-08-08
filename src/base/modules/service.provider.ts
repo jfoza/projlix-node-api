@@ -10,8 +10,8 @@ export function createServiceProvider(
 ): Provider {
   return {
     provide: serviceToken,
-    useFactory: (service: any, aclService: AclService) => {
-      const policy: Policy = aclService.handle();
+    useFactory: async (service: any, aclService: AclService) => {
+      const policy: Policy = await aclService.handle();
       service.setPolicy(policy);
       return service;
     },
