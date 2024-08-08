@@ -13,15 +13,19 @@ export class JwtMiddleware implements NestMiddleware {
   ) {}
 
   async use(req: Request, res: Response, next: NextFunction) {
-    const token = req.headers['authorization']?.split(' ')[1] || null;
+    if (req.headers['authorization']) {
+      const token = req.headers['authorization']?.split(' ')[1] || null;
 
-    if (token) {
-      const payload = await this.jwtService.verifyAsync(token, {
-        secret: this.configService.get<string>('JWT_SECRET'),
-      });
+      if (token) {
+        try {
+          const payload = await this.jwtService.verifyAsync(token, {
+            secret: this.configService.get<string>('JWT_SECRET'),
+          });
 
-      if (payload) {
-        this.jwtInfoService.setUser(payload.user);
+          if (payload) {
+            this.jwtInfoService.setUser(payload.user);
+          }
+        } catch {}
       }
     }
     next();
