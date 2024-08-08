@@ -1,6 +1,3 @@
-import { ErrorMessagesEnum } from '@/shared/enums/error-messages.enum';
-import { Helper } from '@/shared/helpers';
-import { UserTypesEnum } from '@/shared/enums/user-types.enum';
 import {
   BadRequestException,
   Inject,
@@ -11,6 +8,9 @@ import { IUserUpdateUseCase } from '@/features/users/user/interfaces/use-cases/u
 import { IUserRepository } from '@/features/users/user/interfaces/repositories/user.repository.interface';
 import { UpdateUserDto } from '@/features/users/user/presentation/dto/update-user.dto';
 import { IUserEntity } from '@/features/users/user/interfaces/entities/user-entity.interface';
+import { UserTypesEnum } from '@/common/enums/user-types.enum';
+import { Helper } from '@/common/helpers';
+import { ErrorMessagesEnum } from '@/common/enums/error-messages.enum';
 
 @Injectable()
 export class UserUpdateUseCase implements IUserUpdateUseCase {

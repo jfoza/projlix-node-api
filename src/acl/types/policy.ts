@@ -1,5 +1,5 @@
 import { ForbiddenException } from '@nestjs/common';
-import { ErrorMessagesEnum } from '@/shared/enums/error-messages.enum';
+import { ErrorMessagesEnum } from '@/common/enums/error-messages.enum';
 
 export class Policy {
   private rules: string[];

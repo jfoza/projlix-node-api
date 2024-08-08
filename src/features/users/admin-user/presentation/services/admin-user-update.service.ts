@@ -1,10 +1,10 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { Service } from '@/features/base/presentation/services/service';
 import { IAdminUserUpdateService } from '@/features/users/admin-user/interfaces/services/admin-user-update.service.interface';
-import { UserTypesEnum } from '@/shared/enums/user-types.enum';
 import { IUserEntity } from '@/features/users/user/interfaces/entities/user-entity.interface';
 import { IUserUpdateUseCase } from '@/features/users/user/interfaces/use-cases/user-update.use-case.interface';
 import { UpdateAdminUserDto } from '@/features/users/admin-user/presentation/dto/update-admin-user.dto';
+import { Service } from '@/common/presentation/services/service';
+import { UserTypesEnum } from '@/common/enums/user-types.enum';
 
 @Injectable()
 export class AdminUserUpdateService

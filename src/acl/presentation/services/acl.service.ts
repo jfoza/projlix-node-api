@@ -1,9 +1,9 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Policy } from '@/acl/types/policy';
 import { RedisService } from '@/redis/presentation/services/redis.service';
-import { CacheEnum } from '@/shared/enums/cache.enum';
 import { JwtInfoService } from '@/jwt/presentation/services/jwt-info.service';
 import { IRuleRepository } from '@/features/users/rule/interfaces/repositories/rule.repository.interface';
+import { CacheEnum } from '@/common/enums/cache.enum';
 
 @Injectable()
 export class AclService {

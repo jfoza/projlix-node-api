@@ -1,10 +1,9 @@
 import { Inject, Injectable } from '@nestjs/common';
-
-import { RulesEnum } from '@/shared/enums/rules.enum';
-import { Service } from '@/features/base/presentation/services/service';
 import { IAdminUserListService } from '@/features/users/admin-user/interfaces/services/admin-user-list.service.interface';
 import { IAdminUserRepository } from '@/features/users/admin-user/interfaces/repositories/admin-user.repository.interface';
 import { IUserEntity } from '@/features/users/user/interfaces/entities/user-entity.interface';
+import { Service } from '@/common/presentation/services/service';
+import { RulesEnum } from '@/common/enums/rules.enum';
 
 @Injectable()
 export class AdminUserListService

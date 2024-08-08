@@ -1,13 +1,13 @@
-import { ProvidersType } from '@/shared/types/provider.type';
 import { AdminUserRepository } from '@/features/users/admin-user/domain/repositories/admin-user.repository';
 import { AdminUserListService } from '@/features/users/admin-user/presentation/services/admin-user-list.service';
-import { createServiceProvider } from '@/features/base/modules/service.provider';
 import { AdminUserListByIdService } from '@/features/users/admin-user/presentation/services/admin-user-list-by-id.service';
 import { AdminUserCreateService } from '@/features/users/admin-user/presentation/services/admin-user-create.service';
 import { AdminUserUpdateService } from '@/features/users/admin-user/presentation/services/admin-user-update.service';
 import { AdminUserListByIdUseCase } from '@/features/users/admin-user/application/use-cases/admin-user-list-by-id.use-case';
 import { AdminUserCreateUseCase } from '@/features/users/admin-user/application/use-cases/admin-user-create.use-case';
 import { Provider } from '@nestjs/common';
+import { createServiceProvider } from '@/common/modules/service.provider';
+import { ProvidersType } from '@/common/types/provider.type';
 
 export const adminUserProvider: ProvidersType = {
   repositoryProviders: [

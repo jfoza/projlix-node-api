@@ -7,11 +7,11 @@ import { IAuthRepository } from '@/features/auth/interfaces/repositories/auth.re
 import { IRuleRepository } from '@/features/users/rule/interfaces/repositories/rule.repository.interface';
 import { JwtAuthService } from '@/jwt/presentation/services/jwt-auth.service';
 import { AuthResponse } from '@/features/auth/types/auth.response.type';
-import { Hash } from '@/shared/utils/hash';
 import { IJwtToken } from '@/jwt/interfaces/jwt-token.interface';
 import { IRuleEntity } from '@/features/users/rule/interfaces/entities/rule.entity.interface';
 import moment from 'moment';
-import { AuthTypesEnum } from '@/shared/enums/auth-types.enum';
+import { AuthTypesEnum } from '@/common/enums/auth-types.enum';
+import { Hash } from '@/common/utils/hash';
 
 @Injectable()
 export class LoginService implements ILoginService {

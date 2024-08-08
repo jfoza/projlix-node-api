@@ -1,6 +1,6 @@
-import { ProvidersType } from '@/shared/types/provider.type';
 import { Provider } from '@nestjs/common';
 import { ProfileRepository } from '@/features/users/profiles/domain/repositories/profile.repository';
+import { ProvidersType } from '@/common/types/provider.type';
 
 export const profileProviders: ProvidersType = {
   repositoryProviders: [
