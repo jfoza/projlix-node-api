@@ -1,6 +1,4 @@
 import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
-import { ConfigService } from '@nestjs/config';
 import { AuthDto } from '@/auth/presentation/dto/auth.dto';
 import { IUserEntity } from '@/users/user/interfaces/entities/user-entity.interface';
 import { IUserRepository } from '@/users/user/interfaces/repositories/user.repository.interface';
@@ -12,6 +10,8 @@ import { UserTypesEnum } from '@/shared/enums/auth-types.enum';
 import { IRuleRepository } from '@/users/rule/interfaces/repositories/rule.repository.interface';
 import { IRuleEntity } from '@/users/rule/interfaces/entities/rule.entity.interface';
 import { ILoginService } from '@/auth/interfaces/services/login.service.interface';
+import { JwtAuthService } from '@/jwt/presentation/services/jwt-auth.service';
+import { IJwtToken } from '@/jwt/interfaces/jwt-token.interface';
 
 @Injectable()
 export class LoginService implements ILoginService {
@@ -27,11 +27,8 @@ export class LoginService implements ILoginService {
   @Inject('IRuleRepository')
   private readonly ruleRepository: IRuleRepository;
 
-  @Inject(JwtService)
-  private readonly jwtService: JwtService;
-
-  @Inject(ConfigService)
-  private readonly configService: ConfigService;
+  @Inject(JwtAuthService)
+  private readonly jwtAuthService: JwtAuthService;
 
   @Inject(AuthResponse)
   private readonly response: AuthResponse;
@@ -61,13 +58,11 @@ export class LoginService implements ILoginService {
   private async generateAuth(): Promise<void> {
     const payload = { sub: this.user.id, user: this.user };
 
-    const token: string = this.jwtService.sign(payload);
+    const authenticate: IJwtToken = this.jwtAuthService.authenticate(payload);
 
-    const expiresIn: number = +this.configService.get('JWT_EXPIRATION') / 86400;
-
-    this.response.token = token;
-    this.response.type = 'jwt';
-    this.response.expiresIn = `${expiresIn}days`;
+    this.response.token = authenticate.token;
+    this.response.type = authenticate.type;
+    this.response.expiresIn = `${authenticate.expiration / 86400}days`;
 
     const ability: IRuleEntity[] = await this.ruleRepository.findAllByUserId(
       this.user.id,

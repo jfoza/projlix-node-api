@@ -9,8 +9,8 @@ import { AclModule } from './acl/modules/acl.module';
 import { AuthModule } from './auth/modules/auth.module';
 import { RuleModule } from './users/rule/modules/rule.module';
 import { RedisModule } from '@/redis/modules/redis.module';
-import { JwtMiddleware } from '@/jwt/jwt.middleware';
-import { JwtModule } from '@/jwt/jwt.module';
+import { JwtMiddleware } from '@/jwt/presentation/middlewares/jwt.middleware';
+import { JwtModule } from '@/jwt/modules/jwt.module';
 
 @Module({
   imports: [

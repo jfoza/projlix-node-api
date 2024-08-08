@@ -1,15 +1,15 @@
 import { Injectable, NestMiddleware } from '@nestjs/common';
 import { NextFunction } from 'express';
-import { AuthService } from '@/jwt/auth.service';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
+import { JwtInfoService } from '@/jwt/presentation/services/jwt-info.service';
 
 @Injectable()
 export class JwtMiddleware implements NestMiddleware {
   constructor(
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
-    private readonly authService: AuthService,
+    private readonly jwtInfoService: JwtInfoService,
   ) {}
 
   async use(req: Request, res: Response, next: NextFunction) {
@@ -21,7 +21,7 @@ export class JwtMiddleware implements NestMiddleware {
       });
 
       if (payload) {
-        this.authService.setUser(payload.user);
+        this.jwtInfoService.setUser(payload.user);
       }
     }
     next();
