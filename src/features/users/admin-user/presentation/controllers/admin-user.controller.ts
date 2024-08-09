@@ -8,6 +8,7 @@ import {
   ParseUUIDPipe,
   Put,
   UseGuards,
+  Query,
 } from '@nestjs/common';
 import { AuthGuard } from '@/features/auth/config/auth.guard';
 import { IAdminUserListService } from '@/features/users/admin-user/interfaces/services/admin-user-list.service.interface';
@@ -17,6 +18,8 @@ import { IAdminUserUpdateService } from '@/features/users/admin-user/interfaces/
 import { CreateAdminUserDto } from '@/features/users/admin-user/presentation/dto/create-admin-user.dto';
 import { IUserEntity } from '@/features/users/user/interfaces/entities/user-entity.interface';
 import { UpdateAdminUserDto } from '@/features/users/admin-user/presentation/dto/update-admin-user.dto';
+import { ILengthAwarePaginator } from '@/common/interfaces/length-aware-paginator.interface';
+import { AdminUserFiltersDto } from '@/features/users/admin-user/presentation/dto/admin-user-filters.dto';
 
 @UseGuards(AuthGuard)
 @Controller('admin-users')
@@ -41,8 +44,10 @@ export class AdminUserController {
   }
 
   @Get()
-  async findAll(): Promise<IUserEntity[]> {
-    return await this.adminUserListService.handle();
+  async findAll(
+    @Query() adminUserFiltersDto: AdminUserFiltersDto,
+  ): Promise<ILengthAwarePaginator> {
+    return await this.adminUserListService.handle(adminUserFiltersDto);
   }
 
   @Get(':id')

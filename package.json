@@ -6,6 +6,8 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
+    "nest": "nest",
+    "npx": "npx",
     "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js",
     "migration:run": "npm run typeorm -- migration:run -d src/database/config/orm-cli-config.ts",
     "seed:run": "ts-node -r tsconfig-paths/register ./node_modules/typeorm-extension/bin/cli.cjs seed:run -d ./src/database/config/orm-cli-config.ts",

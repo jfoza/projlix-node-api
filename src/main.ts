@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import '@/common/utils/debug';
+import '@/common/domain/typeorm/extensions';
 
 async function bootstrap() {
   const app: INestApplication = await NestFactory.create(AppModule);

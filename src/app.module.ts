@@ -11,6 +11,7 @@ import { UserModule } from '@/features/users/user/modules/user.module';
 import { AdminUserModule } from '@/features/users/admin-user/modules/admin-user.module';
 import { ProfileModule } from '@/features/users/profiles/modules/profiles.module';
 import { RuleModule } from '@/features/users/rule/modules/rule.module';
+import { ProjectModule } from './features/projects/project/modules/project.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { RuleModule } from '@/features/users/rule/modules/rule.module';
     AdminUserModule,
     ProfileModule,
     RuleModule,
+    ProjectModule,
   ],
   controllers: [AppController],
 })
