@@ -8,5 +8,6 @@ import { ColorController } from '@/features/general/colors/presentation/controll
   imports: [TypeOrmModule.forFeature([ColorEntity])],
   controllers: [ColorController],
   providers: [...colorProviders.register()],
+  exports: [...colorProviders.exports()],
 })
 export class ColorsModule {}

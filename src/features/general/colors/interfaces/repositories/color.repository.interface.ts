@@ -1,6 +1,6 @@
-import { ColorEntity } from '@/features/general/colors/domain/entities/color.entity';
+import { IColorEntity } from '@/features/general/colors/interfaces/entities/color.entity.interface';
 
 export interface IColorRepository {
-  findAll(): Promise<ColorEntity[]>;
-  findById(id: string): Promise<ColorEntity>;
+  findAll(): Promise<IColorEntity[]>;
+  findById(id: string): Promise<IColorEntity>;
 }
