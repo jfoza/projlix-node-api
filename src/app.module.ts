@@ -12,6 +12,9 @@ import { AdminUserModule } from '@/features/users/admin-user/modules/admin-user.
 import { ProfileModule } from '@/features/users/profiles/modules/profiles.module';
 import { RuleModule } from '@/features/users/rule/modules/rule.module';
 import { ProjectModule } from './features/projects/project/modules/project.module';
+import { ColorsModule } from './features/general/colors/modules/colors.module';
+import { IconsModule } from './features/general/icons/modules/icons.module';
+import { TagsModule } from './features/general/tags/modules/tags.module';
 
 @Module({
   imports: [
@@ -26,6 +29,9 @@ import { ProjectModule } from './features/projects/project/modules/project.modul
     ProfileModule,
     RuleModule,
     ProjectModule,
+    ColorsModule,
+    IconsModule,
+    TagsModule,
   ],
   controllers: [AppController],
 })
