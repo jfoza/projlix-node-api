@@ -2,8 +2,8 @@ import { ITagRemoveService } from '@/features/general/tags/interfaces/services/t
 import { Inject, Injectable } from '@nestjs/common';
 import { ITagRepository } from '@/features/general/tags/interfaces/repositories/tag.repository.interface';
 import { TagValidations } from '@/features/general/tags/application/validations/tag.validations';
-import { ITagEntity } from '@/features/general/tags/interfaces/entities/tag.entity';
 import { Service } from '@/common/presentation/services/service';
+import { RulesEnum } from '@/common/enums/rules.enum';
 
 @Injectable()
 export class TagRemoveService extends Service implements ITagRemoveService {
@@ -11,11 +11,10 @@ export class TagRemoveService extends Service implements ITagRemoveService {
   private readonly tagRepository: ITagRepository;
 
   async handle(id: string): Promise<void> {
-    const tag: ITagEntity = await TagValidations.tagExists(
-      id,
-      this.tagRepository,
-    );
+    this.getPolicy().can(RulesEnum.TAGS_DELETE);
 
-    await this.tagRepository.remove(tag);
+    await TagValidations.tagExists(id, this.tagRepository);
+
+    await this.tagRepository.remove(id);
   }
 }

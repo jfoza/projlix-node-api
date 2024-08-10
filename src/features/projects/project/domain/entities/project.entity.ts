@@ -1,3 +1,4 @@
+import { IProjectEntity } from '@/features/projects/project/interfaces/entities/project.entity.interface';
 import {
   Column,
   CreateDateColumn,
@@ -9,20 +10,25 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { ITagEntity } from '@/features/general/tags/interfaces/entities/tag.entity';
-import { ColorEntity } from '@/features/general/colors/domain/entities/color.entity';
-import { ProjectEntity } from '@/features/projects/project/domain/entities/project.entity';
+import { IconEntity } from '@/features/general/icons/domain/entities/icon.entity';
+import { TagEntity } from '@/features/general/tags/domain/entities/tag.entity';
 
-@Entity({ schema: 'general', name: 'tags' })
-export class TagEntity implements ITagEntity {
+@Entity({ schema: 'project', name: 'projects' })
+export class ProjectEntity implements IProjectEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @Column({ type: 'uuid' })
-  color_id: string;
+  icon_id: string;
 
   @Column()
   name: string;
+
+  @Column()
+  description: string;
+
+  @Column()
+  unique_name: string;
 
   @Column({ type: 'boolean', default: true })
   active: boolean;
@@ -33,9 +39,9 @@ export class TagEntity implements ITagEntity {
   @UpdateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   updated_at: Date;
 
-  @ManyToOne(() => ColorEntity, (color) => color.tags)
-  @JoinColumn({ name: 'color_id' })
-  color: ColorEntity;
+  @ManyToOne(() => IconEntity, (icon) => icon.projects)
+  @JoinColumn({ name: 'icon_id' })
+  icon: IconEntity;
 
   @JoinTable({
     schema: 'project',
@@ -49,6 +55,6 @@ export class TagEntity implements ITagEntity {
       referencedColumnName: 'id',
     },
   })
-  @ManyToMany(() => ProjectEntity, (project: ProjectEntity) => project.tags)
-  projects: ProjectEntity[];
+  @ManyToMany(() => TagEntity, (tag: TagEntity) => tag.projects)
+  tags: TagEntity[];
 }

@@ -4,6 +4,7 @@ import { ITagRepository } from '@/features/general/tags/interfaces/repositories/
 import { TagValidations } from '@/features/general/tags/application/validations/tag.validations';
 import { Inject, Injectable } from '@nestjs/common';
 import { Service } from '@/common/presentation/services/service';
+import { RulesEnum } from '@/common/enums/rules.enum';
 
 @Injectable()
 export class TagListByIdService extends Service implements ITagListByIdService {
@@ -11,6 +12,8 @@ export class TagListByIdService extends Service implements ITagListByIdService {
   private readonly tagRepository: ITagRepository;
 
   async handle(id: string): Promise<ITagEntity> {
+    this.getPolicy().can(RulesEnum.TAGS_VIEW);
+
     return await TagValidations.tagExists(id, this.tagRepository);
   }
 }

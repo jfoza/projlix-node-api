@@ -7,6 +7,7 @@ import { TagValidations } from '@/features/general/tags/application/validations/
 import { ColorValidations } from '@/features/general/colors/application/validations/color.validations';
 import { IColorRepository } from '@/features/general/colors/interfaces/repositories/color.repository.interface';
 import { Service } from '@/common/presentation/services/service';
+import { RulesEnum } from '@/common/enums/rules.enum';
 
 @Injectable()
 export class TagUpdateService extends Service implements ITagUpdateService {
@@ -17,6 +18,8 @@ export class TagUpdateService extends Service implements ITagUpdateService {
   private readonly colorRepository: IColorRepository;
 
   async handle(id: string, updateTagDto: UpdateTagDto): Promise<ITagEntity> {
+    this.getPolicy().can(RulesEnum.TAGS_UPDATE);
+
     await TagValidations.tagExists(id, this.tagRepository);
 
     await ColorValidations.colorExists(

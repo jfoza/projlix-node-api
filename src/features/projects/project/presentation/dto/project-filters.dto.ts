@@ -1,8 +1,8 @@
 import { FiltersDto } from '@/common/presentation/dto/FiltersDto';
+import { IsInt, IsOptional, IsString, Min } from 'class-validator';
 import { Type } from 'class-transformer';
-import { IsInt, IsOptional, Min } from 'class-validator';
 
-export class TagFiltersDto extends FiltersDto {
+export class ProjectFiltersDto extends FiltersDto {
   @IsOptional()
   @Type(() => Number)
   @IsInt()
@@ -13,4 +13,11 @@ export class TagFiltersDto extends FiltersDto {
   @IsInt()
   @Min(1)
   perPage: number | null = 100;
+
+  @IsOptional()
+  @IsString()
+  title: string;
+
+  @IsOptional()
+  projectsId: string[];
 }

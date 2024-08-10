@@ -40,8 +40,8 @@ export class TagRepository implements ITagRepository {
     return await this.repository.findOne({ where: { id } });
   }
 
-  async remove(tag: ITagEntity): Promise<void> {
-    await this.repository.remove(tag);
+  async remove(id: string): Promise<void> {
+    await this.repository.delete(id);
   }
 
   async update(id: string, updateTagDto: UpdateTagDto): Promise<ITagEntity> {

@@ -6,6 +6,7 @@ import { ITagRepository } from '@/features/general/tags/interfaces/repositories/
 import { IColorRepository } from '@/features/general/colors/interfaces/repositories/color.repository.interface';
 import { ColorValidations } from '@/features/general/colors/application/validations/color.validations';
 import { Service } from '@/common/presentation/services/service';
+import { RulesEnum } from '@/common/enums/rules.enum';
 
 @Injectable()
 export class TagCreateService extends Service implements ITagCreateService {
@@ -16,6 +17,8 @@ export class TagCreateService extends Service implements ITagCreateService {
   private readonly colorRepository: IColorRepository;
 
   async handle(createTagDto: CreateTagDto): Promise<ITagEntity> {
+    this.getPolicy().can(RulesEnum.TAGS_INSERT);
+
     await ColorValidations.colorExists(
       createTagDto.color_id,
       this.colorRepository,

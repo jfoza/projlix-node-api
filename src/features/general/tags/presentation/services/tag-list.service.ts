@@ -5,6 +5,7 @@ import { ITagRepository } from '@/features/general/tags/interfaces/repositories/
 import { Service } from '@/common/presentation/services/service';
 import { TagFiltersDto } from '@/features/general/tags/presentation/dto/tag-filters.dto';
 import { ILengthAwarePaginator } from '@/common/interfaces/length-aware-paginator.interface';
+import { RulesEnum } from '@/common/enums/rules.enum';
 
 @Injectable()
 export class TagListService extends Service implements ITagListService {
@@ -14,6 +15,8 @@ export class TagListService extends Service implements ITagListService {
   async handle(
     tagFiltersDto: TagFiltersDto,
   ): Promise<ITagEntity[] | ILengthAwarePaginator> {
+    this.getPolicy().can(RulesEnum.TAGS_VIEW);
+
     return await this.tagRepository.findAll(tagFiltersDto);
   }
 }

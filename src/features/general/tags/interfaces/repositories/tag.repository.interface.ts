@@ -11,5 +11,5 @@ export interface ITagRepository {
   findById(id: string): Promise<ITagEntity>;
   crate(createTagDto: CreateTagDto): Promise<ITagEntity>;
   update(id: string, updateTagDto: UpdateTagDto): Promise<ITagEntity>;
-  remove(tag: ITagEntity): Promise<void>;
+  remove(id: string): Promise<void>;
 }

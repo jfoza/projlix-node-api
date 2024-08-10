@@ -2,10 +2,12 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { IIconEntity } from '@/features/general/icons/interfaces/entities/icon.entity.interface';
+import { ProjectEntity } from '@/features/projects/project/domain/entities/project.entity';
 
 @Entity({ schema: 'general', name: 'icons' })
 export class IconEntity implements IIconEntity {
@@ -23,4 +25,7 @@ export class IconEntity implements IIconEntity {
 
   @UpdateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   updated_at: Date;
+
+  @OneToMany(() => ProjectEntity, (project) => project.icon)
+  projects: ProjectEntity[];
 }
