@@ -5,6 +5,7 @@ import { IUserUpdateUseCase } from '@/features/users/user/interfaces/use-cases/u
 import { UpdateAdminUserDto } from '@/features/users/admin-user/presentation/dto/update-admin-user.dto';
 import { Service } from '@/common/presentation/services/service';
 import { UserTypesEnum } from '@/common/enums/user-types.enum';
+import { RulesEnum } from '@/common/enums/rules.enum';
 
 @Injectable()
 export class AdminUserUpdateService
@@ -18,6 +19,8 @@ export class AdminUserUpdateService
     id: string,
     updateAdminUserDto: UpdateAdminUserDto,
   ): Promise<IUserEntity> {
+    this.getPolicy().can(RulesEnum.ADMIN_USERS_UPDATE);
+
     return this.userUpdateUseCase.execute(
       id,
       UserTypesEnum.ADMINISTRATIVE,

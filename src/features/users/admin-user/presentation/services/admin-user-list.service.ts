@@ -17,7 +17,7 @@ export class AdminUserListService
   async handle(
     adminUserFiltersDto: AdminUserFiltersDto,
   ): Promise<ILengthAwarePaginator> {
-    this.getPolicy().canValidate(RulesEnum.ADMIN_USERS_VIEW);
+    this.getPolicy().can(RulesEnum.ADMIN_USERS_VIEW);
 
     return this.adminUserRepository.findAll(adminUserFiltersDto);
   }

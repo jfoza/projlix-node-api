@@ -8,17 +8,17 @@ export class Policy {
     this.rules = rules;
   }
 
-  can(ability: string): boolean {
-    return this.rules.includes(ability);
+  haveRule(rule: string): boolean {
+    return this.rules.includes(rule);
   }
 
-  canValidate(ability: string): void {
-    if (!this.can(ability)) {
-      this.canException();
+  can(rule: string): void {
+    if (!this.haveRule(rule)) {
+      this.policyException();
     }
   }
 
-  canException(): void {
+  policyException(): void {
     throw new ForbiddenException(ErrorMessagesEnum.NOT_AUTHORIZED);
   }
 }

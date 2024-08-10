@@ -5,6 +5,7 @@ import { IAdminUserCreateUseCase } from '@/features/users/admin-user/interfaces/
 import { CreateAdminUserDto } from '@/features/users/admin-user/presentation/dto/create-admin-user.dto';
 import { IUserEntity } from '@/features/users/user/interfaces/entities/user-entity.interface';
 import { Service } from '@/common/presentation/services/service';
+import { RulesEnum } from '@/common/enums/rules.enum';
 
 @Injectable()
 export class AdminUserCreateService
@@ -18,6 +19,8 @@ export class AdminUserCreateService
   private readonly adminUserCreateUseCase: IAdminUserCreateUseCase;
 
   async handle(createAdminUserDto: CreateAdminUserDto): Promise<IUserEntity> {
+    this.getPolicy().can(RulesEnum.ADMIN_USERS_INSERT);
+
     const userCreated: IUserEntity =
       await this.userCreateUseCase.execute(createAdminUserDto);
 
