@@ -155,6 +155,7 @@ start_dev () {
     echo "$ICON Iniciando aplicação em modo Dev"
     echo
     $PNPM run start:dev
+    $PNPM start redis:cleanup
 }
 
 start_prod () {

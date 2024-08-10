@@ -38,6 +38,10 @@ export class RedisService {
     await this.client.del(key);
   }
 
+  public async flushAll(): Promise<void> {
+    await this.client.flushall();
+  }
+
   public async invalidateByPattern(pattern: string): Promise<void> {
     this.client.keys(pattern, (err, keys) => {
       if (err) throw err;
