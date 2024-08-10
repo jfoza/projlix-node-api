@@ -1,9 +1,9 @@
 export interface ILengthAwarePaginator {
-  currentPage: number;
+  current_page: number;
   data: any[];
   from: number;
-  lastPage: number;
-  perPage: number;
+  last_page: number;
+  per_page: number;
   to: number;
   total: number;
 }

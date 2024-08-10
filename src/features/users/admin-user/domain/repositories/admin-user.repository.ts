@@ -34,7 +34,7 @@ export class AdminUserRepository implements IAdminUserRepository {
 
     return paginate(queryBuilder, {
       page: adminUserFiltersDto.page,
-      limit: adminUserFiltersDto.perPage,
+      perPage: adminUserFiltersDto.perPage,
     });
   }
 

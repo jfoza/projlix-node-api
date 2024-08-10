@@ -3,29 +3,29 @@ import { ILengthAwarePaginator } from '@/common/interfaces/length-aware-paginato
 
 type PaginationOptionsType = {
   page: number;
-  limit: number;
+  perPage: number;
 };
 
 export async function paginate<T>(
   queryBuilder: SelectQueryBuilder<T>,
   options: PaginationOptionsType,
 ): Promise<ILengthAwarePaginator> {
-  const { page, limit } = options;
+  const { page, perPage } = options;
   const [items, total] = await queryBuilder
-    .skip((page - 1) * limit)
-    .take(limit)
+    .skip((page - 1) * perPage)
+    .take(perPage)
     .getManyAndCount();
 
-  const lastPage: number = Math.ceil(total / limit);
-  const from: number = total > 0 ? (page - 1) * limit + 1 : 0;
-  const to: number = Math.min(page * limit, total);
+  const lastPage: number = Math.ceil(total / perPage);
+  const from: number = total > 0 ? (page - 1) * perPage + 1 : 0;
+  const to: number = Math.min(page * perPage, total);
 
   return {
-    currentPage: page,
+    current_page: page,
     data: items,
     from,
-    lastPage: lastPage,
-    perPage: limit,
+    last_page: lastPage,
+    per_page: perPage,
     to,
     total,
   };
