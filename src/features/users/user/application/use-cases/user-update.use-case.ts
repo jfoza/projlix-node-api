@@ -11,11 +11,15 @@ import { IUserEntity } from '@/features/users/user/interfaces/entities/user-enti
 import { UserTypesEnum } from '@/common/enums/user-types.enum';
 import { Helper } from '@/common/helpers';
 import { ErrorMessagesEnum } from '@/common/enums/error-messages.enum';
+import { AclService } from '@/acl/presentation/services/acl.service';
 
 @Injectable()
 export class UserUpdateUseCase implements IUserUpdateUseCase {
   @Inject('IUserRepository')
   private readonly userRepository: IUserRepository;
+
+  @Inject(AclService)
+  private readonly aclService: AclService;
 
   private id: string;
   private userType: UserTypesEnum;
@@ -35,6 +39,8 @@ export class UserUpdateUseCase implements IUserUpdateUseCase {
 
     updateUserDto.short_name = Helper.shortStringGenerate(updateUserDto.name);
 
+    await this.aclService.invalidate(this.id);
+
     return this.userRepository.update(this.id, this.updateUserDto);
   }
 
@@ -49,6 +55,10 @@ export class UserUpdateUseCase implements IUserUpdateUseCase {
       this.userType === UserTypesEnum.ADMINISTRATIVE &&
       !userExists.admin_user
     ) {
+      throw new NotFoundException(ErrorMessagesEnum.USER_NOT_FOUND);
+    }
+
+    if (this.userType === UserTypesEnum.OPERATIONAL && !userExists.team_user) {
       throw new NotFoundException(ErrorMessagesEnum.USER_NOT_FOUND);
     }
 

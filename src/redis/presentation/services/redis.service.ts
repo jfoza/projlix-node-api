@@ -9,8 +9,12 @@ export class RedisService {
     this.client = client;
   }
 
-  public async save(key: string, value: any): Promise<void> {
-    await this.client.set(key, JSON.stringify(value));
+  public async save(key: string, value: any, ttl?: number): Promise<void> {
+    if (ttl) {
+      await this.client.set(key, JSON.stringify(value), 'EX', ttl);
+    } else {
+      await this.client.set(key, JSON.stringify(value));
+    }
   }
 
   public async recover<T>(key: string): Promise<T | null> {
@@ -23,12 +27,16 @@ export class RedisService {
     return JSON.parse(data) as T;
   }
 
-  public async remember<T>(key: string, fn: () => Promise<T>): Promise<T> {
+  public async remember<T>(
+    key: string,
+    fn: () => Promise<T>,
+    ttl?: number,
+  ): Promise<T> {
     let value = await this.recover<T>(key);
 
     if (!value) {
       value = await fn();
-      await this.save(key, value);
+      await this.save(key, value, ttl);
     }
 
     return value;

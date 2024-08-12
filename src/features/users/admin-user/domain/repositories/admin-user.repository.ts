@@ -45,7 +45,7 @@ export class AdminUserRepository implements IAdminUserRepository {
     return queryBuilder.andWhere('user.id = :userId', { userId }).getOne();
   }
 
-  getListBaseQuery(): SelectQueryBuilder<IUserEntity> {
+  private getListBaseQuery(): SelectQueryBuilder<IUserEntity> {
     return this.userRepository
       .createQueryBuilder('user')
       .select([
@@ -64,7 +64,7 @@ export class AdminUserRepository implements IAdminUserRepository {
       .orderBy();
   }
 
-  getListBaseQueryFilters(
+  private getListBaseQueryFilters(
     adminUserFiltersDto: AdminUserFiltersDto,
   ): SelectQueryBuilder<IUserEntity> {
     const queryBuilder = this.getListBaseQuery();

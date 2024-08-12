@@ -51,15 +51,17 @@ export class AdminUserController {
   }
 
   @Get(':id')
-  findOne(@Param('id', new ParseUUIDPipe()) id: string): Promise<IUserEntity> {
-    return this.adminUserListByIdService.handle(id);
+  async findOne(
+    @Param('id', new ParseUUIDPipe()) id: string,
+  ): Promise<IUserEntity> {
+    return await this.adminUserListByIdService.handle(id);
   }
 
   @Put(':id')
-  update(
+  async update(
     @Param('id') id: string,
     @Body() updateAdminUserDto: UpdateAdminUserDto,
   ): Promise<IUserEntity> {
-    return this.adminUserUpdateService.handle(id, updateAdminUserDto);
+    return await this.adminUserUpdateService.handle(id, updateAdminUserDto);
   }
 }

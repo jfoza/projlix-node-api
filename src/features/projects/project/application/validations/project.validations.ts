@@ -8,12 +8,30 @@ export class ProjectValidations {
     id: string,
     projectRepository: IProjectRepository,
   ): Promise<IProjectEntity> {
-    const project = await projectRepository.findById(id);
+    const project: IProjectEntity = await projectRepository.findById(id);
 
     if (!project) {
       throw new NotFoundException(ErrorMessagesEnum.PROJECT_NOT_FOUND);
     }
 
     return project;
+  }
+
+  static async projectsExists(
+    projectsId: string[],
+    projectRepository: IProjectRepository,
+  ): Promise<IProjectEntity[]> {
+    const projects: IProjectEntity[] =
+      await projectRepository.findByIds(projectsId);
+
+    const ids: string[] = projects.map((project: IProjectEntity) => project.id);
+
+    for (const projectId of projectsId) {
+      if (!ids.includes(projectId)) {
+        throw new NotFoundException(ErrorMessagesEnum.PROJECT_NOT_FOUND);
+      }
+    }
+
+    return projects;
   }
 }

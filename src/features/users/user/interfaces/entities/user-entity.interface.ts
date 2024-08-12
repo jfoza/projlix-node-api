@@ -1,5 +1,6 @@
 import { ProfileEntity } from '@/features/users/profiles/domain/entities/profile.entity';
 import { AdminUserEntity } from '@/features/users/admin-user/domain/entities/admin-user.entity';
+import { TeamUserEntity } from '@/features/users/team-user/domain/entities/team-user.entity';
 
 export interface IUserEntity {
   id: string;
@@ -13,4 +14,5 @@ export interface IUserEntity {
   updated_at: Date;
   profile: ProfileEntity;
   admin_user: AdminUserEntity;
+  team_user: TeamUserEntity;
 }

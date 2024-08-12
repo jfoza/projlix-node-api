@@ -12,6 +12,7 @@ import {
 } from 'typeorm';
 import { IconEntity } from '@/features/general/icons/domain/entities/icon.entity';
 import { TagEntity } from '@/features/general/tags/domain/entities/tag.entity';
+import { TeamUserEntity } from '@/features/users/team-user/domain/entities/team-user.entity';
 
 @Entity({ schema: 'project', name: 'projects' })
 export class ProjectEntity implements IProjectEntity {
@@ -57,4 +58,22 @@ export class ProjectEntity implements IProjectEntity {
   })
   @ManyToMany(() => TagEntity, (tag: TagEntity) => tag.projects)
   tags: TagEntity[];
+
+  @JoinTable({
+    schema: 'user_conf',
+    name: 'projects_team_users',
+    joinColumn: {
+      name: 'team_user_id',
+      referencedColumnName: 'id',
+    },
+    inverseJoinColumn: {
+      name: 'project_id',
+      referencedColumnName: 'id',
+    },
+  })
+  @ManyToMany(
+    () => TeamUserEntity,
+    (team_user: TeamUserEntity) => team_user.projects,
+  )
+  team_users: TeamUserEntity[];
 }

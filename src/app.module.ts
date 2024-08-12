@@ -16,6 +16,7 @@ import { ColorsModule } from './features/general/colors/modules/colors.module';
 import { IconsModule } from './features/general/icons/modules/icons.module';
 import { TagsModule } from './features/general/tags/modules/tags.module';
 import { CommandsModule } from './commands/modules/commands.module';
+import { TeamUserModule } from './features/users/team-user/modules/team-user.module';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { CommandsModule } from './commands/modules/commands.module';
     ColorsModule,
     IconsModule,
     TagsModule,
+    TeamUserModule,
   ],
   controllers: [AppController],
 })

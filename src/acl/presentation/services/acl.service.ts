@@ -25,9 +25,13 @@ export class AclService {
       if (userId) {
         const redisKey: string = CacheEnum.ABILITY_USER(userId);
 
-        rules = await this.redis.remember(redisKey, () => {
-          return this.ruleRepository.getUserRuleDescriptions(userId);
-        });
+        rules = await this.redis.remember(
+          redisKey,
+          () => {
+            return this.ruleRepository.getUserRuleDescriptions(userId);
+          },
+          604800,
+        );
       }
 
       return new Policy(rules);

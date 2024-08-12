@@ -35,10 +35,20 @@ export class UserRepository implements IUserRepository {
     });
   }
 
-  async findById(id: string): Promise<UserEntity> {
+  async findById(id: string): Promise<IUserEntity> {
     return this.typeOrmRepository.findOne({
       where: { id: id },
-      relations: ['admin_user'],
+      relations: ['admin_user', 'profile'],
+    });
+  }
+
+  async findByUserLoggedById(
+    id: string,
+    relation: string,
+  ): Promise<IUserEntity> {
+    return this.typeOrmRepository.findOne({
+      where: { id: id },
+      relations: ['admin_user', 'profile', relation],
     });
   }
 

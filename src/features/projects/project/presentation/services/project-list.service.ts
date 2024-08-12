@@ -6,7 +6,6 @@ import { Inject, Injectable } from '@nestjs/common';
 import { Service } from '@/common/presentation/services/service';
 import { IProjectRepository } from '@/features/projects/project/interfaces/repositories/project.repository.interface';
 import { Policy } from '@/acl/types/policy';
-import { match } from '@/common/utils/match';
 import { RulesEnum } from '@/common/enums/rules.enum';
 
 @Injectable()

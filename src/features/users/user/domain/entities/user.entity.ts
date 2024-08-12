@@ -13,6 +13,7 @@ import { IUserEntity } from '@/features/users/user/interfaces/entities/user-enti
 import { ProfileEntity } from '@/features/users/profiles/domain/entities/profile.entity';
 import { AdminUserEntity } from '@/features/users/admin-user/domain/entities/admin-user.entity';
 import { AuthEntity } from '@/features/auth/domain/entities/auth.entity';
+import { TeamUserEntity } from '@/features/users/team-user/domain/entities/team-user.entity';
 
 @Entity({ schema: 'user_conf', name: 'users' })
 export class UserEntity implements IUserEntity {
@@ -52,6 +53,9 @@ export class UserEntity implements IUserEntity {
     (admin_user: AdminUserEntity) => admin_user.user,
   )
   admin_user: AdminUserEntity;
+
+  @OneToOne(() => TeamUserEntity, (team_user: TeamUserEntity) => team_user.user)
+  team_user: TeamUserEntity;
 
   @OneToMany(() => AuthEntity, (auth: AuthEntity) => auth.user)
   auth: AuthEntity[];
