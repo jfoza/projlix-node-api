@@ -18,8 +18,23 @@ export class TeamUserRepository implements ITeamUserRepository {
   @InjectRepository(TeamUserEntity)
   private readonly teamUserRepository: Repository<TeamUserEntity>;
 
-  create(userId: string): Promise<ITeamUserEntity> {
-    return Promise.resolve(undefined);
+  async create(userId: string): Promise<ITeamUserEntity> {
+    const teamUser: TeamUserEntity = this.teamUserRepository.create({
+      user_id: userId,
+    });
+
+    return await this.teamUserRepository.save(teamUser);
+  }
+
+  async createProjectsRelation(
+    savedTeamUser: ITeamUserEntity,
+    projectsId: string[],
+  ): Promise<void> {
+    await this.teamUserRepository
+      .createQueryBuilder()
+      .relation(TeamUserEntity, 'projects')
+      .of(savedTeamUser.id)
+      .add(projectsId);
   }
 
   async findAll(
@@ -73,8 +88,7 @@ export class TeamUserRepository implements ITeamUserRepository {
       ])
       .innerJoinAndSelect('user.team_user', 'team_user')
       .innerJoinAndSelect('user.profile', 'profile')
-      .leftJoinAndSelect('team_user.projects', 'projects')
-      .where('team_user.id IS NOT NULL');
+      .leftJoinAndSelect('team_user.projects', 'projects');
   }
 
   private getBaseQueryFilters(

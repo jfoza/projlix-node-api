@@ -12,6 +12,7 @@ import { UserTypesEnum } from '@/common/enums/user-types.enum';
 import { Helper } from '@/common/helpers';
 import { ErrorMessagesEnum } from '@/common/enums/error-messages.enum';
 import { AclService } from '@/acl/presentation/services/acl.service';
+import { IUserUpdateStatus } from '@/features/users/admin-user/interfaces/responses/user-update-status.interface';
 
 @Injectable()
 export class UserUpdateUseCase implements IUserUpdateUseCase {
@@ -24,48 +25,42 @@ export class UserUpdateUseCase implements IUserUpdateUseCase {
   private id: string;
   private userType: UserTypesEnum;
   private updateUserDto: UpdateUserDto;
+  private user: IUserEntity;
 
-  async execute(
-    id: string,
-    userType: UserTypesEnum,
-    updateUserDto: UpdateUserDto,
-  ): Promise<IUserEntity> {
+  setId(id: string): void {
     this.id = id;
-    this.userType = userType;
-    this.updateUserDto = updateUserDto;
-
-    await this.userExists();
-    await this.userEmailExists();
-
-    updateUserDto.short_name = Helper.shortStringGenerate(updateUserDto.name);
-
-    await this.aclService.invalidate(this.id);
-
-    return this.userRepository.update(this.id, this.updateUserDto);
   }
 
-  private async userExists(): Promise<IUserEntity> {
-    const userExists: IUserEntity = await this.userRepository.findById(this.id);
+  setUserType(userType: UserTypesEnum): void {
+    this.userType = userType;
+  }
 
-    if (!userExists) {
+  setUpdateUserDto(updateUserDto: UpdateUserDto): void {
+    this.updateUserDto = updateUserDto;
+  }
+
+  async userExists(): Promise<IUserEntity> {
+    this.user = await this.userRepository.findById(this.id);
+
+    if (!this.user) {
       throw new NotFoundException(ErrorMessagesEnum.USER_NOT_FOUND);
     }
 
     if (
       this.userType === UserTypesEnum.ADMINISTRATIVE &&
-      !userExists.admin_user
+      !this.user.admin_user
     ) {
       throw new NotFoundException(ErrorMessagesEnum.USER_NOT_FOUND);
     }
 
-    if (this.userType === UserTypesEnum.OPERATIONAL && !userExists.team_user) {
+    if (this.userType === UserTypesEnum.OPERATIONAL && !this.user.team_user) {
       throw new NotFoundException(ErrorMessagesEnum.USER_NOT_FOUND);
     }
 
-    return userExists;
+    return this.user;
   }
 
-  private async userEmailExists(): Promise<void> {
+  async userEmailExists(): Promise<void> {
     const userEmailExists: IUserEntity = await this.userRepository.findByEmail(
       this.updateUserDto.email,
     );
@@ -73,5 +68,23 @@ export class UserUpdateUseCase implements IUserUpdateUseCase {
     if (userEmailExists && userEmailExists.id !== this.id) {
       throw new BadRequestException(ErrorMessagesEnum.EMAIL_ALREADY_EXISTS);
     }
+  }
+
+  async update(): Promise<IUserEntity> {
+    this.updateUserDto.short_name = Helper.shortStringGenerate(
+      this.updateUserDto.name,
+    );
+
+    await this.aclService.invalidate(this.id);
+
+    return await this.userRepository.update(this.id, this.updateUserDto);
+  }
+
+  async updateStatus(): Promise<IUserUpdateStatus> {
+    const newStatus = !this.user.active;
+
+    await this.userRepository.updateStatus(this.id, newStatus);
+
+    return { id: this.id, active: newStatus };
   }
 }

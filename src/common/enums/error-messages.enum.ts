@@ -3,7 +3,8 @@ export enum ErrorMessagesEnum {
   USER_NOT_FOUND = 'Usuário não encontrado.',
   EMAIL_ALREADY_EXISTS = 'Este e-mal já existe.',
   USER_NOT_ALLOWED = 'Você não tem acesso aos dados deste usuário.',
-  PROFILE_NOT_ALLOWED = 'Sem acesso ao perfil.',
+  PROFILE_NOT_ALLOWED = 'Perfil não permitido.',
+  PROFILE_NOT_FOUND = 'Perfil não encontrado.',
 
   INVALID_COLUMN_NAME = 'A propridade columnName é inválida.',
   INVALID_COLUMN_ORDER = 'A propridade columnOrder é inválida.',

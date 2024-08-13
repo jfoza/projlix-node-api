@@ -38,7 +38,7 @@ export class UserRepository implements IUserRepository {
   async findById(id: string): Promise<IUserEntity> {
     return this.typeOrmRepository.findOne({
       where: { id: id },
-      relations: ['admin_user', 'profile'],
+      relations: ['admin_user', 'team_user', 'profile'],
     });
   }
 
@@ -64,6 +64,7 @@ export class UserRepository implements IUserRepository {
     const user: UserEntity = await this.typeOrmRepository.preload({
       ...{
         name: updateUserDto.name,
+        profile_id: updateUserDto.profile,
         short_name: updateUserDto.short_name,
         email: updateUserDto.email,
       },

@@ -59,7 +59,7 @@ export class AdminUserController {
 
   @Put(':id')
   async update(
-    @Param('id') id: string,
+    @Param('id', new ParseUUIDPipe()) id: string,
     @Body() updateAdminUserDto: UpdateAdminUserDto,
   ): Promise<IUserEntity> {
     return await this.adminUserUpdateService.handle(id, updateAdminUserDto);

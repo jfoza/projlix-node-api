@@ -15,16 +15,19 @@ export class AdminUserUpdateService
   @Inject('IUserUpdateUseCase')
   private readonly userUpdateUseCase: IUserUpdateUseCase;
 
-  handle(
+  async handle(
     id: string,
     updateAdminUserDto: UpdateAdminUserDto,
   ): Promise<IUserEntity> {
     this.getPolicy().can(RulesEnum.ADMIN_USERS_UPDATE);
 
-    return this.userUpdateUseCase.execute(
-      id,
-      UserTypesEnum.ADMINISTRATIVE,
-      updateAdminUserDto,
-    );
+    this.userUpdateUseCase.setId(id);
+    this.userUpdateUseCase.setUserType(UserTypesEnum.ADMINISTRATIVE);
+    this.userUpdateUseCase.setUpdateUserDto(updateAdminUserDto);
+
+    await this.userUpdateUseCase.userExists();
+    await this.userUpdateUseCase.userEmailExists();
+
+    return await this.userUpdateUseCase.update();
   }
 }
