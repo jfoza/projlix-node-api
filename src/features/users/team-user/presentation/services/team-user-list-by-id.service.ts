@@ -29,16 +29,16 @@ export class TeamUserListByIdService
 
     switch (true) {
       case policy.haveRule(RulesEnum.TEAM_USERS_ADMIN_MASTER_VIEW):
-        return this.findByAdminMaster();
+        return await this.findByAdminMaster();
 
       case policy.haveRule(RulesEnum.TEAM_USERS_PROJECT_MANAGER_VIEW):
-        return this.findByProjectManager();
+        return await this.findByProjectManager();
 
       case policy.haveRule(RulesEnum.TEAM_USERS_TEAM_LEADER_VIEW):
-        return this.findByTeamLeader();
+        return await this.findByTeamLeader();
 
       case policy.haveRule(RulesEnum.TEAM_USERS_PROJECT_MEMBER_VIEW):
-        return this.findByProjectMember();
+        return await this.findByProjectMember();
 
       default:
         policy.policyException();

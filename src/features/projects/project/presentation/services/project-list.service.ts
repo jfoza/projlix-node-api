@@ -15,7 +15,7 @@ export class ProjectListService extends Service implements IProjectListService {
 
   private projectFiltersDto: ProjectFiltersDto;
 
-  handle(
+  async handle(
     projectFiltersDto: ProjectFiltersDto,
   ): Promise<IProjectEntity[] | ILengthAwarePaginator> {
     this.projectFiltersDto = projectFiltersDto;
@@ -24,7 +24,7 @@ export class ProjectListService extends Service implements IProjectListService {
 
     switch (true) {
       case policy.haveRule(RulesEnum.PROJECTS_ADMIN_MASTER_VIEW):
-        return this.findByAdminMaster();
+        return await this.findByAdminMaster();
 
       case policy.haveRule(RulesEnum.PROJECTS_PROJECT_MANAGER_VIEW) ||
         policy.haveRule(RulesEnum.PROJECTS_TEAM_LEADER_VIEW) ||
@@ -45,6 +45,8 @@ export class ProjectListService extends Service implements IProjectListService {
   private async findByAccess(): Promise<
     IProjectEntity[] | ILengthAwarePaginator
   > {
+    this.projectFiltersDto.projectsId = await this.getTeamUserProjectsId();
+
     return await this.projectRepository.findAll(this.projectFiltersDto);
   }
 }

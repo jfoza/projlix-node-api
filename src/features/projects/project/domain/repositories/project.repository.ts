@@ -16,7 +16,12 @@ export class ProjectRepository implements IProjectRepository {
   private readonly repository: Repository<ProjectEntity>;
 
   async create(createProjectDto: CreateProjectDto): Promise<IProjectEntity> {
-    const project = this.repository.create(createProjectDto);
+    const project = this.repository.create({
+      icon_id: createProjectDto.icon_id,
+      name: createProjectDto.name,
+      description: createProjectDto.description,
+      unique_name: createProjectDto.unique_name,
+    });
 
     return await this.repository.save(project);
   }

@@ -19,20 +19,20 @@ export class TeamUserUpdateStatusService
   @Inject('IUserUpdateUseCase')
   private readonly userUpdateUseCase: IUserUpdateUseCase;
 
-  handle(id: string): Promise<IUserUpdateStatus> {
+  async handle(id: string): Promise<IUserUpdateStatus> {
     this.id = id;
 
     const policy: Policy = this.getPolicy();
 
     switch (true) {
       case policy.haveRule(RulesEnum.TEAM_USERS_ADMIN_MASTER_UPDATE):
-        return this.updateByAdminMaster();
+        return await this.updateByAdminMaster();
 
       case policy.haveRule(RulesEnum.TEAM_USERS_PROJECT_MANAGER_UPDATE):
-        return this.updateByProjectManager();
+        return await this.updateByProjectManager();
 
       case policy.haveRule(RulesEnum.TEAM_USERS_TEAM_LEADER_UPDATE):
-        return this.updateByTeamLeader();
+        return await this.updateByTeamLeader();
 
       default:
         policy.policyException();

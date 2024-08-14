@@ -6,6 +6,8 @@ export enum ErrorMessagesEnum {
   PROFILE_NOT_ALLOWED = 'Perfil não permitido.',
   PROFILE_NOT_FOUND = 'Perfil não encontrado.',
 
+  REGISTER_NAME_ALREADY_EXISTS = 'Já existe um registro com o nome informado.',
+
   INVALID_COLUMN_NAME = 'A propridade columnName é inválida.',
   INVALID_COLUMN_ORDER = 'A propridade columnOrder é inválida.',
 

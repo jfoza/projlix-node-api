@@ -34,4 +34,17 @@ export class ProjectValidations {
 
     return projects;
   }
+
+  static async projectExistsByName(
+    name: string,
+    projectRepository: IProjectRepository,
+  ): Promise<void> {
+    const project: IProjectEntity = await projectRepository.findByName(name);
+
+    if (project) {
+      throw new NotFoundException(
+        ErrorMessagesEnum.REGISTER_NAME_ALREADY_EXISTS,
+      );
+    }
+  }
 }

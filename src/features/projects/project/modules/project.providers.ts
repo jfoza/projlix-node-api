@@ -4,6 +4,7 @@ import { ProjectRepository } from '@/features/projects/project/domain/repositori
 import { ProjectListService } from '@/features/projects/project/presentation/services/project-list.service';
 import { createServiceProvider } from '@/common/modules/service.provider';
 import { ProjectListByIdService } from '@/features/projects/project/presentation/services/project-list-by-id.service';
+import { ProjectCreateService } from '@/features/projects/project/presentation/services/project-create.service';
 
 export const projectProviders: ProvidersType = {
   repositoryProviders: [
@@ -20,6 +21,9 @@ export const projectProviders: ProvidersType = {
 
     ProjectListByIdService,
     createServiceProvider('IProjectListByIdService', ProjectListByIdService),
+
+    ProjectCreateService,
+    createServiceProvider('IProjectCreateService', ProjectCreateService),
   ],
 
   useCaseProviders: [],

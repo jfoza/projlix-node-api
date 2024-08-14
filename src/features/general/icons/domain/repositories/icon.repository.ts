@@ -17,4 +17,8 @@ export class IconRepository implements IIconRepository {
   async findById(id: string): Promise<IIconEntity> {
     return await this.repository.findOne({ where: { id } });
   }
+
+  async findByName(name: string): Promise<IIconEntity> {
+    return await this.repository.findOne({ where: { name } });
+  }
 }

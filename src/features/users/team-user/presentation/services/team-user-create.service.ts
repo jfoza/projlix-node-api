@@ -44,13 +44,13 @@ export class TeamUserCreateService
 
     switch (true) {
       case policy.haveRule(RulesEnum.TEAM_USERS_ADMIN_MASTER_INSERT):
-        return this.createByAdminMaster();
+        return await this.createByAdminMaster();
 
       case policy.haveRule(RulesEnum.TEAM_USERS_PROJECT_MANAGER_INSERT):
-        return this.createByProjectManager();
+        return await this.createByProjectManager();
 
       case policy.haveRule(RulesEnum.TEAM_USERS_TEAM_LEADER_INSERT):
-        return this.createByTeamLeader();
+        return await this.createByTeamLeader();
 
       default:
         policy.policyException();
