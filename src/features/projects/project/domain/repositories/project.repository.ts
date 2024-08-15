@@ -2,13 +2,16 @@ import { IProjectRepository } from '@/features/projects/project/interfaces/repos
 import { CreateProjectDto } from '@/features/projects/project/presentation/dto/create-project.dto';
 import { IProjectEntity } from '@/features/projects/project/interfaces/entities/project.entity.interface';
 import { ILengthAwarePaginator } from '@/common/interfaces/length-aware-paginator.interface';
-import { UpdateProjectDto } from '@/features/projects/project/presentation/dto/update-project.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
 import { ProjectEntity } from '@/features/projects/project/domain/entities/project.entity';
 import { ProjectFiltersDto } from '@/features/projects/project/presentation/dto/project-filters.dto';
 import { paginate } from '@/common/domain/pagination';
 import { Injectable } from '@nestjs/common';
+import { ProjectIconDto } from '@/features/projects/project/presentation/dto/project-icon.dto';
+import { ProjectInfoUpdateDto } from '@/features/projects/project/presentation/dto/project-info-update.dto';
+import { ProjectTagDto } from '@/features/projects/project/presentation/dto/project-tag.dto';
+import { ProjectTeamUserDto } from '@/features/projects/project/presentation/dto/project-team-user.dto';
 
 @Injectable()
 export class ProjectRepository implements IProjectRepository {
@@ -24,6 +27,17 @@ export class ProjectRepository implements IProjectRepository {
     });
 
     return await this.repository.save(project);
+  }
+
+  async saveTagsRelation(
+    project: IProjectEntity,
+    tagsId: string[],
+  ): Promise<void> {
+    await this.repository
+      .createQueryBuilder()
+      .relation(ProjectEntity, 'tags')
+      .of(project.id)
+      .add(tagsId);
   }
 
   async findAll(
@@ -56,7 +70,7 @@ export class ProjectRepository implements IProjectRepository {
   async findById(id: string): Promise<IProjectEntity> {
     return await this.repository.findOne({
       where: { id },
-      relations: ['tags.color', 'icon'],
+      relations: ['tags.color', 'icon', 'team_users'],
     });
   }
 
@@ -78,23 +92,55 @@ export class ProjectRepository implements IProjectRepository {
     });
   }
 
-  async remove(id: string): Promise<void> {
-    await this.repository.delete(id);
-  }
-
-  async update(
+  async updateInfo(
     id: string,
-    updateProjectDto: UpdateProjectDto,
+    projectInfoUpdateDto: ProjectInfoUpdateDto,
   ): Promise<IProjectEntity> {
     const project: ProjectEntity = await this.repository.preload({
       ...{
-        name: updateProjectDto.name,
-        unique_name: updateProjectDto.unique_name,
-        description: updateProjectDto.description,
+        name: projectInfoUpdateDto.name,
+        unique_name: projectInfoUpdateDto.unique_name,
+        description: projectInfoUpdateDto.description,
       },
       id,
     });
 
     return await this.repository.save(project);
+  }
+
+  async updateIcon(
+    id: string,
+    projectIconDto: ProjectIconDto,
+  ): Promise<IProjectEntity> {
+    const project: ProjectEntity = await this.repository.preload({
+      ...{
+        icon_id: projectIconDto.icon_id,
+      },
+      id,
+    });
+
+    return await this.repository.save(project);
+  }
+
+  async remove(id: string): Promise<void> {
+    await this.repository.delete(id);
+  }
+
+  async removeTagRelation(projectTagDto: ProjectTagDto): Promise<void> {
+    await this.repository
+      .createQueryBuilder()
+      .relation(ProjectEntity, 'tags')
+      .of(projectTagDto.project_id)
+      .remove(projectTagDto.tag_id);
+  }
+
+  async removeTeamUserRelation(
+    projectTeamUserDto: ProjectTeamUserDto,
+  ): Promise<void> {
+    await this.repository
+      .createQueryBuilder()
+      .relation(ProjectEntity, 'team_users')
+      .of(projectTeamUserDto.project_id)
+      .remove(projectTeamUserDto.team_user_id);
   }
 }

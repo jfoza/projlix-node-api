@@ -5,6 +5,13 @@ import { ProjectListService } from '@/features/projects/project/presentation/ser
 import { createServiceProvider } from '@/common/modules/service.provider';
 import { ProjectListByIdService } from '@/features/projects/project/presentation/services/project-list-by-id.service';
 import { ProjectCreateService } from '@/features/projects/project/presentation/services/project-create.service';
+import { ProjectAddTagService } from '@/features/projects/project/presentation/services/project-add-tag.service';
+import { ProjectAddTeamUserService } from '@/features/projects/project/presentation/services/project-add-team-user.service';
+import { ProjectIconUpdateService } from '@/features/projects/project/presentation/services/project-icon-update.service';
+import { ProjectInfoUpdateService } from '@/features/projects/project/presentation/services/project-info-update.service';
+import { ProjectRemoveService } from '@/features/projects/project/presentation/services/project-remove.service';
+import { ProjectTagRemoveService } from '@/features/projects/project/presentation/services/project-tag-remove.service';
+import { ProjectTeamUserRemoveService } from '@/features/projects/project/presentation/services/project-team-user-remove.service';
 
 export const projectProviders: ProvidersType = {
   repositoryProviders: [
@@ -24,6 +31,39 @@ export const projectProviders: ProvidersType = {
 
     ProjectCreateService,
     createServiceProvider('IProjectCreateService', ProjectCreateService),
+
+    ProjectAddTagService,
+    createServiceProvider('IProjectAddTagService', ProjectAddTagService),
+
+    ProjectAddTeamUserService,
+    createServiceProvider(
+      'IProjectAddTeamUserService',
+      ProjectAddTeamUserService,
+    ),
+
+    ProjectIconUpdateService,
+    createServiceProvider(
+      'IProjectIconUpdateService',
+      ProjectIconUpdateService,
+    ),
+
+    ProjectInfoUpdateService,
+    createServiceProvider(
+      'IProjectInfoUpdateService',
+      ProjectInfoUpdateService,
+    ),
+
+    ProjectRemoveService,
+    createServiceProvider('IProjectRemoveService', ProjectRemoveService),
+
+    ProjectTagRemoveService,
+    createServiceProvider('IProjectTagRemoveService', ProjectTagRemoveService),
+
+    ProjectTeamUserRemoveService,
+    createServiceProvider(
+      'IProjectTeamUserRemoveService',
+      ProjectTeamUserRemoveService,
+    ),
   ],
 
   useCaseProviders: [],

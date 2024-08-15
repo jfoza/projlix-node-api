@@ -37,7 +37,10 @@ export class TagRepository implements ITagRepository {
   }
 
   async findById(id: string): Promise<ITagEntity> {
-    return await this.repository.findOne({ where: { id } });
+    return await this.repository.findOne({
+      where: { id },
+      relations: ['color', 'projects'],
+    });
   }
 
   async remove(id: string): Promise<void> {

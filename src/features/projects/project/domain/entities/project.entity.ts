@@ -59,18 +59,6 @@ export class ProjectEntity implements IProjectEntity {
   @ManyToMany(() => TagEntity, (tag: TagEntity) => tag.projects)
   tags: TagEntity[];
 
-  @JoinTable({
-    schema: 'user_conf',
-    name: 'projects_team_users',
-    joinColumn: {
-      name: 'team_user_id',
-      referencedColumnName: 'id',
-    },
-    inverseJoinColumn: {
-      name: 'project_id',
-      referencedColumnName: 'id',
-    },
-  })
   @ManyToMany(
     () => TeamUserEntity,
     (team_user: TeamUserEntity) => team_user.projects,

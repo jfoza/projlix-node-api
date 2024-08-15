@@ -2,7 +2,6 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  JoinTable,
   ManyToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -33,18 +32,6 @@ export class RuleEntity implements IRuleEntity {
   @UpdateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   updated_at: Date;
 
-  @JoinTable({
-    schema: 'user_conf',
-    name: 'profiles_rules',
-    joinColumn: {
-      name: 'profile_id',
-      referencedColumnName: 'id',
-    },
-    inverseJoinColumn: {
-      name: 'rule_id',
-      referencedColumnName: 'id',
-    },
-  })
   @ManyToMany(() => ProfileEntity, (profile: ProfileEntity) => profile.rules)
   profiles: ProfileEntity[];
 }

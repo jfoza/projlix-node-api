@@ -3,7 +3,6 @@ import {
   CreateDateColumn,
   Entity,
   JoinColumn,
-  JoinTable,
   ManyToMany,
   ManyToOne,
   PrimaryGeneratedColumn,
@@ -37,18 +36,6 @@ export class TagEntity implements ITagEntity {
   @JoinColumn({ name: 'color_id' })
   color: ColorEntity;
 
-  @JoinTable({
-    schema: 'project',
-    name: 'projects_tags',
-    joinColumn: {
-      name: 'project_id',
-      referencedColumnName: 'id',
-    },
-    inverseJoinColumn: {
-      name: 'tag_id',
-      referencedColumnName: 'id',
-    },
-  })
   @ManyToMany(() => ProjectEntity, (project: ProjectEntity) => project.tags)
   projects: ProjectEntity[];
 }

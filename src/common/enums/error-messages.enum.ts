@@ -14,6 +14,9 @@ export enum ErrorMessagesEnum {
   COLOR_NOT_FOUND = 'Cor não encontrada.',
   ICON_NOT_FOUND = 'Ícone não encontrado.',
   TAG_NOT_FOUND = 'Tag não encontrada.',
+  TAG_HAS_PROJECTS_IN_DELETE = 'Esta tag não pode ser excluída pois possui projetos vinculados.',
+  TAG_ALREADY_ADDED_IN_PROJECT = 'Esta tag já está vinculada ao projeto.',
+  TEAM_USER_ALREADY_ADDED_IN_PROJECT = 'Este usuário já está vinculado ao projeto.',
 
   PROJECT_NOT_FOUND = 'Projeto não encontrado.',
   PROJECT_NOT_ALLOWED = 'Você não tem acesso a este projeto.',

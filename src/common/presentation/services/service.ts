@@ -5,6 +5,7 @@ import { IUserEntity } from '@/features/users/user/interfaces/entities/user-enti
 import { IProjectEntity } from '@/features/projects/project/interfaces/entities/project.entity.interface';
 import { Helper } from '@/common/helpers';
 import { ErrorMessagesEnum } from '@/common/enums/error-messages.enum';
+import { ITeamUserEntity } from '@/features/users/team-user/interfaces/entities/team-user.entity.interface';
 
 export abstract class Service {
   @Inject(JwtInfoService)
@@ -18,6 +19,12 @@ export abstract class Service {
 
   getPolicy(): Policy {
     return this.policy;
+  }
+
+  protected async getTeamUser(): Promise<ITeamUserEntity> {
+    const user = await this.jwtInfoService.getUserRelations('team_user');
+
+    return user.team_user;
   }
 
   protected async getTeamUserProjects(): Promise<IProjectEntity[]> {

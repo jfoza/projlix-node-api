@@ -1,4 +1,5 @@
-import { ColorEntity } from '@/features/general/colors/domain/entities/color.entity';
+import { IProjectEntity } from '@/features/projects/project/interfaces/entities/project.entity.interface';
+import { IColorEntity } from '@/features/general/colors/interfaces/entities/color.entity.interface';
 
 export interface ITagEntity {
   id: string;
@@ -7,5 +8,6 @@ export interface ITagEntity {
   active: boolean;
   created_at: Date;
   updated_at: Date;
-  color: ColorEntity;
+  color: IColorEntity;
+  projects: IProjectEntity[];
 }

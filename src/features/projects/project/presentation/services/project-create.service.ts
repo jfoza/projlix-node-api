@@ -9,6 +9,7 @@ import { ProjectValidations } from '@/features/projects/project/application/vali
 import { IProjectRepository } from '@/features/projects/project/interfaces/repositories/project.repository.interface';
 import { IIconRepository } from '@/features/general/icons/interfaces/repositories/icon.repository.interface';
 import { Helper } from '@/common/helpers';
+import { ITeamUserRepository } from '@/features/users/team-user/interfaces/repositories/team-user.repository.interface';
 
 @Injectable()
 export class ProjectCreateService
@@ -23,6 +24,9 @@ export class ProjectCreateService
   @Inject('IIconRepository')
   private readonly iconRepository: IIconRepository;
 
+  @Inject('ITeamUserRepository')
+  private readonly teamUserRepository: ITeamUserRepository;
+
   async handle(createProjectDto: CreateProjectDto): Promise<IProjectEntity> {
     this.createProjectDto = createProjectDto;
 
@@ -35,6 +39,9 @@ export class ProjectCreateService
       case policy.haveRule(RulesEnum.PROJECTS_PROJECT_MANAGER_INSERT) ||
         policy.haveRule(RulesEnum.PROJECTS_TEAM_LEADER_INSERT):
         return await this.createByAccess();
+
+      default:
+        policy.policyException();
     }
   }
 
@@ -57,7 +64,11 @@ export class ProjectCreateService
 
     await this.handlePopulateDefaultData();
 
-    return await this.projectRepository.create(this.createProjectDto);
+    const project = await this.projectRepository.create(this.createProjectDto);
+
+    await this.crateProjectTeamUserRelation(project);
+
+    return project;
   }
 
   private async handlePopulateDefaultData(): Promise<void> {
@@ -67,5 +78,15 @@ export class ProjectCreateService
     this.createProjectDto.unique_name = Helper.stringUniqueName(
       this.createProjectDto.name,
     );
+  }
+
+  private async crateProjectTeamUserRelation(
+    project: IProjectEntity,
+  ): Promise<void> {
+    const teamUser = await this.getTeamUser();
+
+    await this.teamUserRepository.createProjectsRelation(teamUser, [
+      project.id,
+    ]);
   }
 }

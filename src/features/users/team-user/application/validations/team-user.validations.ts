@@ -16,4 +16,17 @@ export class TeamUserValidations {
 
     return user;
   }
+
+  static async teamUserExists(
+    id: string,
+    teamUserRepository: ITeamUserRepository,
+  ): Promise<IUserEntity> {
+    const user: IUserEntity = await teamUserRepository.findById(id);
+
+    if (!user) {
+      throw new NotFoundException(ErrorMessagesEnum.USER_NOT_FOUND);
+    }
+
+    return user;
+  }
 }

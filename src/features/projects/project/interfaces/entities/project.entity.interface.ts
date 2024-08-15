@@ -1,5 +1,6 @@
 import { IIconEntity } from '@/features/general/icons/interfaces/entities/icon.entity.interface';
 import { ITagEntity } from '@/features/general/tags/interfaces/entities/tag.entity';
+import { ITeamUserEntity } from '@/features/users/team-user/interfaces/entities/team-user.entity.interface';
 
 export interface IProjectEntity {
   id: string;
@@ -12,4 +13,5 @@ export interface IProjectEntity {
   updated_at: Date;
   icon: IIconEntity;
   tags: ITagEntity[];
+  team_users: ITeamUserEntity[];
 }

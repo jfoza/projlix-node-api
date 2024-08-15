@@ -51,8 +51,10 @@ export class TagController {
   }
 
   @Get(':id')
-  findById(@Param('id', new ParseUUIDPipe()) id: string): Promise<ITagEntity> {
-    return this.tagListByIdService.handle(id);
+  async findById(
+    @Param('id', new ParseUUIDPipe()) id: string,
+  ): Promise<ITagEntity> {
+    return await this.tagListByIdService.handle(id);
   }
 
   @Post()
@@ -61,16 +63,16 @@ export class TagController {
   }
 
   @Put(':id')
-  update(
+  async update(
     @Param('id', new ParseUUIDPipe()) id: string,
     @Body() updateTagDto: UpdateTagDto,
   ): Promise<ITagEntity> {
-    return this.tagUpdateService.handle(id, updateTagDto);
+    return await this.tagUpdateService.handle(id, updateTagDto);
   }
 
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete(':id')
-  remove(@Param('id', new ParseUUIDPipe()) id: string): Promise<void> {
-    return this.tagRemoveService.handle(id);
+  async remove(@Param('id', new ParseUUIDPipe()) id: string): Promise<void> {
+    return await this.tagRemoveService.handle(id);
   }
 }
