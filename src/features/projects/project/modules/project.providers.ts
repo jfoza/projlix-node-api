@@ -12,6 +12,7 @@ import { ProjectInfoUpdateService } from '@/features/projects/project/presentati
 import { ProjectRemoveService } from '@/features/projects/project/presentation/services/project-remove.service';
 import { ProjectTagRemoveService } from '@/features/projects/project/presentation/services/project-tag-remove.service';
 import { ProjectTeamUserRemoveService } from '@/features/projects/project/presentation/services/project-team-user-remove.service';
+import { ProjectListByIdUseCase } from '@/features/projects/project/application/use-cases/project-list-by-id.use-case';
 
 export const projectProviders: ProvidersType = {
   repositoryProviders: [
@@ -66,7 +67,13 @@ export const projectProviders: ProvidersType = {
     ),
   ],
 
-  useCaseProviders: [],
+  useCaseProviders: [
+    ProjectListByIdUseCase,
+    {
+      provide: 'IProjectListByIdUseCase',
+      useExisting: ProjectListByIdUseCase,
+    },
+  ],
 
   exports(): string[] {
     return ['IProjectRepository'];

@@ -7,6 +7,7 @@ import { IProjectRepository } from '@/features/projects/project/interfaces/repos
 import { RulesEnum } from '@/common/enums/rules.enum';
 import { ProjectValidations } from '@/features/projects/project/application/validations/project.validations';
 import { Helper } from '@/common/helpers';
+import { IProjectListByIdUseCase } from '@/features/projects/project/interfaces/use-cases/project-list-by-id.use-case.interface';
 
 @Injectable()
 export class ProjectInfoUpdateService
@@ -18,6 +19,9 @@ export class ProjectInfoUpdateService
 
   @Inject('IProjectRepository')
   private readonly projectRepository: IProjectRepository;
+
+  @Inject('IProjectListByIdUseCase')
+  private readonly projectListByIdUseCase: IProjectListByIdUseCase;
 
   handle(
     id: string,
@@ -62,14 +66,14 @@ export class ProjectInfoUpdateService
   }
 
   private async handleValidations(): Promise<void> {
-    await ProjectValidations.projectExists(this.id, this.projectRepository);
+    await this.projectListByIdUseCase.setId(this.id).execute();
 
     await ProjectValidations.projectExistsByName(
       this.projectInfoUpdateDto.name,
       this.projectRepository,
     );
 
-    this.projectInfoUpdateDto.unique_name = Helper.stringUniqueName(
+    this.projectInfoUpdateDto.uniqueName = Helper.stringUniqueName(
       this.projectInfoUpdateDto.name,
     );
   }

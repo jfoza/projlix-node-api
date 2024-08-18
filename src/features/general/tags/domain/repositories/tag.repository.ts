@@ -15,25 +15,34 @@ export class TagRepository implements ITagRepository {
   @InjectRepository(TagEntity)
   private readonly repository: Repository<TagEntity>;
 
-  async crate(createTagDto: CreateTagDto): Promise<ITagEntity> {
-    const tag: ITagEntity = this.repository.create(createTagDto);
-
-    return await this.repository.save(tag);
-  }
-
   async findAll(
     tagFiltersDto: TagFiltersDto,
   ): Promise<ITagEntity[] | ILengthAwarePaginator> {
-    if (tagFiltersDto.page) {
-      const qb = this.repository.createQueryBuilder('tag');
+    const qb = this.repository
+      .createQueryBuilder('tag')
+      .when(tagFiltersDto.name, (qb) =>
+        qb.andWhere('tag.name ILIKE :name', {
+          name: `%${tagFiltersDto.name}%`,
+        }),
+      )
+      .when(
+        tagFiltersDto.columnName,
+        (qb) =>
+          qb.orderBy(
+            `tag.${tagFiltersDto.columnName}`,
+            tagFiltersDto.columnOrder,
+          ),
+        (qb) => qb.orderBy('tag.created_at', 'DESC'),
+      );
 
+    if (tagFiltersDto.page) {
       return await paginate(qb, {
         page: tagFiltersDto.page,
         perPage: tagFiltersDto.perPage,
       });
     }
 
-    return await this.repository.find();
+    return await qb.getMany();
   }
 
   async findById(id: string): Promise<ITagEntity> {
@@ -43,19 +52,32 @@ export class TagRepository implements ITagRepository {
     });
   }
 
-  async remove(id: string): Promise<void> {
-    await this.repository.delete(id);
+  async create(createTagDto: CreateTagDto): Promise<ITagEntity> {
+    const tag: ITagEntity = this.repository.create({
+      name: createTagDto.name,
+      color_id: createTagDto.color,
+    });
+
+    return await this.repository.save(tag);
   }
 
   async update(id: string, updateTagDto: UpdateTagDto): Promise<ITagEntity> {
     const tag: ITagEntity = await this.repository.preload({
       ...{
-        color_id: updateTagDto.color_id,
+        color_id: updateTagDto.color,
         name: updateTagDto.name,
       },
       id,
     });
 
     return await this.repository.save(tag);
+  }
+
+  async updateStatus(tagId: string, newStatus: boolean): Promise<void> {
+    await this.repository.update(tagId, { active: newStatus });
+  }
+
+  async remove(id: string): Promise<void> {
+    await this.repository.delete(id);
   }
 }

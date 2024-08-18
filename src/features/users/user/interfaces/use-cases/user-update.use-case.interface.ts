@@ -9,6 +9,7 @@ export interface IUserUpdateUseCase {
   setUpdateUserDto(updateUserDto: UpdateUserDto): void;
   userExists(): Promise<IUserEntity>;
   userEmailExists(): Promise<void>;
+  getUser(): IUserEntity;
   update(): Promise<IUserEntity>;
   updateStatus(): Promise<IUserUpdateStatus>;
 }

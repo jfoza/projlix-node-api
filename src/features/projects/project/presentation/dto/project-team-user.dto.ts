@@ -6,10 +6,10 @@ export class ProjectTeamUserDto {
   @IsNotEmpty()
   @IsString()
   @IsUUID()
-  project_id: string;
+  projectId: string;
 
   @IsNotEmpty()
   @IsString()
   @IsUUID()
-  team_user_id: string;
+  teamUserId: string;
 }

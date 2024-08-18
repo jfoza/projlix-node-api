@@ -4,12 +4,12 @@ import { Service } from '@/common/presentation/services/service';
 import { ProjectTagDto } from '@/features/projects/project/presentation/dto/project-tag.dto';
 import { IProjectEntity } from '@/features/projects/project/interfaces/entities/project.entity.interface';
 import { RulesEnum } from '@/common/enums/rules.enum';
-import { ProjectValidations } from '@/features/projects/project/application/validations/project.validations';
 import { IProjectRepository } from '@/features/projects/project/interfaces/repositories/project.repository.interface';
 import { TagValidations } from '@/features/general/tags/application/validations/tag.validations';
 import { ITagRepository } from '@/features/general/tags/interfaces/repositories/tag.repository.interface';
 import { ITagEntity } from '@/features/general/tags/interfaces/entities/tag.entity';
 import { ErrorMessagesEnum } from '@/common/enums/error-messages.enum';
+import { IProjectListByIdUseCase } from '@/features/projects/project/interfaces/use-cases/project-list-by-id.use-case.interface';
 
 @Injectable()
 export class ProjectAddTagService
@@ -19,6 +19,9 @@ export class ProjectAddTagService
   private projectTagDto: ProjectTagDto;
   private project: IProjectEntity;
   private tag: ITagEntity;
+
+  @Inject('IProjectListByIdUseCase')
+  private readonly projectListByIdUseCase: IProjectListByIdUseCase;
 
   @Inject('IProjectRepository')
   private readonly projectRepository: IProjectRepository;
@@ -59,13 +62,13 @@ export class ProjectAddTagService
   }
 
   private async handleValidations(): Promise<void> {
-    this.project = await ProjectValidations.projectExists(
-      this.projectTagDto.project_id,
-      this.projectRepository,
-    );
+    this.project = await this.projectListByIdUseCase
+      .setId(this.projectTagDto.projectId)
+      .setRelations(['tags'])
+      .execute();
 
     this.tag = await TagValidations.tagExists(
-      this.projectTagDto.tag_id,
+      this.projectTagDto.tagId,
       this.tagRepository,
     );
 
@@ -82,7 +85,7 @@ export class ProjectAddTagService
 
   private async addTag(): Promise<IProjectEntity> {
     await this.projectRepository.saveTagsRelation(this.project, [
-      this.projectTagDto.tag_id,
+      this.projectTagDto.tagId,
     ]);
 
     this.project.tags.push(this.tag);

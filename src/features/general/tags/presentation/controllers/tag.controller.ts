@@ -24,6 +24,8 @@ import { CreateTagDto } from '@/features/general/tags/presentation/dto/create-ta
 import { UpdateTagDto } from '@/features/general/tags/presentation/dto/update-tag.dto';
 import { TagFiltersDto } from '@/features/general/tags/presentation/dto/tag-filters.dto';
 import { ILengthAwarePaginator } from '@/common/interfaces/length-aware-paginator.interface';
+import { ITagUpdateStatusService } from '@/features/general/tags/interfaces/services/tag-update-status.service.interface';
+import { ITagUpdateStatus } from '@/features/general/tags/interfaces/responses/tag-update-status.interface';
 
 @UseGuards(AuthGuard)
 @Controller('tags')
@@ -36,6 +38,9 @@ export class TagController {
 
   @Inject('ITagCreateService')
   private readonly tagCreateService: ITagCreateService;
+
+  @Inject('ITagUpdateStatusService')
+  private readonly tagUpdateStatusService: ITagUpdateStatusService;
 
   @Inject('ITagUpdateService')
   private readonly tagUpdateService: ITagUpdateService;
@@ -68,6 +73,13 @@ export class TagController {
     @Body() updateTagDto: UpdateTagDto,
   ): Promise<ITagEntity> {
     return await this.tagUpdateService.handle(id, updateTagDto);
+  }
+
+  @Put('status/:id')
+  async updateStatus(
+    @Param('id', new ParseUUIDPipe()) id: string,
+  ): Promise<ITagUpdateStatus> {
+    return await this.tagUpdateStatusService.handle(id);
   }
 
   @HttpCode(HttpStatus.NO_CONTENT)

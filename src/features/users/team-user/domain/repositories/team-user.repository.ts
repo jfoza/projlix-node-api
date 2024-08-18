@@ -26,7 +26,7 @@ export class TeamUserRepository implements ITeamUserRepository {
     return await this.teamUserRepository.save(teamUser);
   }
 
-  async createProjectsRelation(
+  async saveProjectsRelation(
     savedTeamUser: ITeamUserEntity,
     projectsId: string[],
   ): Promise<void> {
@@ -41,9 +41,14 @@ export class TeamUserRepository implements ITeamUserRepository {
     teamUserFiltersDto: TeamUserFiltersDto,
   ): Promise<ILengthAwarePaginator> {
     const queryBuilder: SelectQueryBuilder<IUserEntity> =
-      this.getBaseQueryFilters(teamUserFiltersDto).orderBy(
-        this.orderByGenerate(teamUserFiltersDto.columnName),
-        teamUserFiltersDto.columnOrder,
+      this.getBaseQueryFilters(teamUserFiltersDto).when(
+        teamUserFiltersDto.columnName,
+        (qb) =>
+          qb.orderBy(
+            this.orderByGenerate(teamUserFiltersDto.columnName),
+            teamUserFiltersDto.columnOrder,
+          ),
+        (qb) => qb.orderBy('user.created_at', 'DESC'),
       );
 
     return paginate(queryBuilder, {
@@ -76,13 +81,12 @@ export class TeamUserRepository implements ITeamUserRepository {
     return this.userRepository
       .createQueryBuilder('user')
       .select([
-        'user.id AS user_id',
+        'user.id',
         'user.name',
         'user.short_name',
         'user.email',
         'user.active',
         'user.created_at',
-        'team_user.id AS team_user_id',
         'profile.description AS profile_description',
         'profile.unique_name AS profile_unique_name',
       ])
@@ -95,8 +99,10 @@ export class TeamUserRepository implements ITeamUserRepository {
     teamUserFiltersDto: TeamUserFiltersDto,
   ): SelectQueryBuilder<IUserEntity> {
     return this.getBaseQuery()
-      .when(teamUserFiltersDto.name, (qb, name) =>
-        qb.andWhere('user.name ILIKE :name', { name: `%${name}%` }),
+      .when(teamUserFiltersDto.name, (qb) =>
+        qb.andWhere('user.name ILIKE :name', {
+          name: `%${teamUserFiltersDto.name}%`,
+        }),
       )
       .when(teamUserFiltersDto.email, (qb, email) =>
         qb.andWhere('user.email = :email', { email }),
@@ -107,8 +113,10 @@ export class TeamUserRepository implements ITeamUserRepository {
           { nameOrEmail: `%${nameOrEmail}%` },
         ),
       )
-      .when(teamUserFiltersDto.active, (qb, active) =>
-        qb.andWhere('user.active = :active', { active }),
+      .when(teamUserFiltersDto.active !== undefined, (qb) =>
+        qb.andWhere('user.active = :active', {
+          active: teamUserFiltersDto.active,
+        }),
       )
       .when(teamUserFiltersDto.profileId, (qb, profileId) =>
         qb.andWhere('profile.id = :profileId', { profileId }),

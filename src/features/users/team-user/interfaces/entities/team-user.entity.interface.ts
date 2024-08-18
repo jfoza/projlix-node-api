@@ -8,4 +8,5 @@ export interface ITeamUserEntity {
   updated_at: Date;
   user: UserEntity;
   projects: ProjectEntity[];
+  can: boolean;
 }

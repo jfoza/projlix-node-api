@@ -6,6 +6,7 @@ create table "user_conf".team_users
     user_id uuid not null constraint "TeamUsersUserIdFk" references "user_conf".users on delete cascade,
     creator_id uuid,
     updater_id uuid,
+    can boolean not null default true,
     created_at timestamp(0) default now() not null,
     updated_at timestamp(0) default now() not null
 );

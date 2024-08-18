@@ -11,7 +11,7 @@ export interface ITeamUserRepository {
   findById(id: string): Promise<IUserEntity>;
   findByUserId(userId: string): Promise<IUserEntity>;
   create(userId: string): Promise<ITeamUserEntity>;
-  createProjectsRelation(
+  saveProjectsRelation(
     savedTeamUser: ITeamUserEntity,
     projectsId: string[],
   ): Promise<void>;

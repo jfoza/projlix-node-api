@@ -4,5 +4,5 @@ export class ProjectIconDto {
   @IsNotEmpty()
   @IsString()
   @IsUUID()
-  icon_id: string;
+  iconId: string;
 }

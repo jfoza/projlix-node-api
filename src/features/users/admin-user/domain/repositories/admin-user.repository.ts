@@ -30,7 +30,15 @@ export class AdminUserRepository implements IAdminUserRepository {
     adminUserFiltersDto: AdminUserFiltersDto,
   ): Promise<ILengthAwarePaginator> {
     const queryBuilder: SelectQueryBuilder<IUserEntity> =
-      this.getListBaseQueryFilters(adminUserFiltersDto);
+      this.getListBaseQueryFilters(adminUserFiltersDto).when(
+        adminUserFiltersDto.columnName,
+        (qb) =>
+          qb.orderBy(
+            `user.${adminUserFiltersDto.columnName}`,
+            adminUserFiltersDto.columnOrder,
+          ),
+        (qb) => qb.orderBy(`user.created_at`, 'DESC'),
+      );
 
     return paginate(queryBuilder, {
       page: adminUserFiltersDto.page,
@@ -60,8 +68,7 @@ export class AdminUserRepository implements IAdminUserRepository {
       ])
       .innerJoinAndSelect('user.admin_user', 'admin_user')
       .leftJoinAndSelect('user.profile', 'profile')
-      .where('admin_user.id IS NOT NULL')
-      .orderBy();
+      .where('admin_user.id IS NOT NULL');
   }
 
   private getListBaseQueryFilters(

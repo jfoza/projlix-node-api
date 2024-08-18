@@ -3,14 +3,13 @@ import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { Service } from '@/common/presentation/services/service';
 import { ProjectTeamUserDto } from '@/features/projects/project/presentation/dto/project-team-user.dto';
 import { IProjectEntity } from '@/features/projects/project/interfaces/entities/project.entity.interface';
-import { IProjectRepository } from '@/features/projects/project/interfaces/repositories/project.repository.interface';
 import { ITeamUserRepository } from '@/features/users/team-user/interfaces/repositories/team-user.repository.interface';
 import { RulesEnum } from '@/common/enums/rules.enum';
-import { ProjectValidations } from '@/features/projects/project/application/validations/project.validations';
 import { ErrorMessagesEnum } from '@/common/enums/error-messages.enum';
 import { TeamUserValidations } from '@/features/users/team-user/application/validations/team-user.validations';
 import { IUserEntity } from '@/features/users/user/interfaces/entities/user-entity.interface';
 import { ProfileUniqueNameEnum } from '@/common/enums/profile-unique-name.enum';
+import { IProjectListByIdUseCase } from '@/features/projects/project/interfaces/use-cases/project-list-by-id.use-case.interface';
 
 @Injectable()
 export class ProjectAddTeamUserService
@@ -21,8 +20,8 @@ export class ProjectAddTeamUserService
   private project: IProjectEntity;
   private user: IUserEntity;
 
-  @Inject('IProjectRepository')
-  private readonly projectRepository: IProjectRepository;
+  @Inject('IProjectListByIdUseCase')
+  private readonly projectListByIdUseCase: IProjectListByIdUseCase;
 
   @Inject('ITeamUserRepository')
   private readonly teamUserRepository: ITeamUserRepository;
@@ -80,13 +79,13 @@ export class ProjectAddTeamUserService
   }
 
   private async handleValidations(): Promise<void> {
-    this.project = await ProjectValidations.projectExists(
-      this.projectTeamUserDto.project_id,
-      this.projectRepository,
-    );
+    this.project = await this.projectListByIdUseCase
+      .setId(this.projectTeamUserDto.projectId)
+      .setRelations(['team_users'])
+      .execute();
 
     this.user = await TeamUserValidations.teamUserExists(
-      this.projectTeamUserDto.team_user_id,
+      this.projectTeamUserDto.teamUserId,
       this.teamUserRepository,
     );
 
@@ -102,7 +101,7 @@ export class ProjectAddTeamUserService
   }
 
   private async addTeamUser(): Promise<IProjectEntity> {
-    await this.teamUserRepository.createProjectsRelation(this.user.team_user, [
+    await this.teamUserRepository.saveProjectsRelation(this.user.team_user, [
       this.project.id,
     ]);
 

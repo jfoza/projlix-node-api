@@ -13,7 +13,7 @@ export interface IProjectRepository {
   ): Promise<IProjectEntity[] | ILengthAwarePaginator>;
   findAllWithoutFilters(): Promise<IProjectEntity[]>;
   findByIds(ids: string[]): Promise<IProjectEntity[]>;
-  findById(id: string): Promise<IProjectEntity>;
+  findById(id: string, relations: string[]): Promise<IProjectEntity>;
   findByName(name: string): Promise<IProjectEntity>;
   findByUniqueName(uniqueName: string): Promise<IProjectEntity>;
   create(createProjectDto: CreateProjectDto): Promise<IProjectEntity>;

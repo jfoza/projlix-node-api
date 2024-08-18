@@ -18,28 +18,6 @@ export class ProjectRepository implements IProjectRepository {
   @InjectRepository(ProjectEntity)
   private readonly repository: Repository<ProjectEntity>;
 
-  async create(createProjectDto: CreateProjectDto): Promise<IProjectEntity> {
-    const project = this.repository.create({
-      icon_id: createProjectDto.icon_id,
-      name: createProjectDto.name,
-      description: createProjectDto.description,
-      unique_name: createProjectDto.unique_name,
-    });
-
-    return await this.repository.save(project);
-  }
-
-  async saveTagsRelation(
-    project: IProjectEntity,
-    tagsId: string[],
-  ): Promise<void> {
-    await this.repository
-      .createQueryBuilder()
-      .relation(ProjectEntity, 'tags')
-      .of(project.id)
-      .add(tagsId);
-  }
-
   async findAll(
     projectFiltersDto: ProjectFiltersDto,
   ): Promise<IProjectEntity[] | ILengthAwarePaginator> {
@@ -67,10 +45,13 @@ export class ProjectRepository implements IProjectRepository {
     return await this.repository.find();
   }
 
-  async findById(id: string): Promise<IProjectEntity> {
+  async findById(
+    id: string,
+    relations: string[] = [],
+  ): Promise<IProjectEntity> {
     return await this.repository.findOne({
       where: { id },
-      relations: ['tags.color', 'icon', 'team_users'],
+      relations,
     });
   }
 
@@ -92,6 +73,28 @@ export class ProjectRepository implements IProjectRepository {
     });
   }
 
+  async create(createProjectDto: CreateProjectDto): Promise<IProjectEntity> {
+    const project = this.repository.create({
+      icon_id: createProjectDto.iconId,
+      name: createProjectDto.name,
+      description: createProjectDto.description,
+      unique_name: createProjectDto.uniqueName,
+    });
+
+    return await this.repository.save(project);
+  }
+
+  async saveTagsRelation(
+    project: IProjectEntity,
+    tagsId: string[],
+  ): Promise<void> {
+    await this.repository
+      .createQueryBuilder()
+      .relation(ProjectEntity, 'tags')
+      .of(project.id)
+      .add(tagsId);
+  }
+
   async updateInfo(
     id: string,
     projectInfoUpdateDto: ProjectInfoUpdateDto,
@@ -99,7 +102,7 @@ export class ProjectRepository implements IProjectRepository {
     const project: ProjectEntity = await this.repository.preload({
       ...{
         name: projectInfoUpdateDto.name,
-        unique_name: projectInfoUpdateDto.unique_name,
+        unique_name: projectInfoUpdateDto.uniqueName,
         description: projectInfoUpdateDto.description,
       },
       id,
@@ -114,7 +117,7 @@ export class ProjectRepository implements IProjectRepository {
   ): Promise<IProjectEntity> {
     const project: ProjectEntity = await this.repository.preload({
       ...{
-        icon_id: projectIconDto.icon_id,
+        icon_id: projectIconDto.iconId,
       },
       id,
     });
@@ -130,8 +133,8 @@ export class ProjectRepository implements IProjectRepository {
     await this.repository
       .createQueryBuilder()
       .relation(ProjectEntity, 'tags')
-      .of(projectTagDto.project_id)
-      .remove(projectTagDto.tag_id);
+      .of(projectTagDto.projectId)
+      .remove(projectTagDto.tagId);
   }
 
   async removeTeamUserRelation(
@@ -140,7 +143,7 @@ export class ProjectRepository implements IProjectRepository {
     await this.repository
       .createQueryBuilder()
       .relation(ProjectEntity, 'team_users')
-      .of(projectTeamUserDto.project_id)
-      .remove(projectTeamUserDto.team_user_id);
+      .of(projectTeamUserDto.projectId)
+      .remove(projectTeamUserDto.teamUserId);
   }
 }

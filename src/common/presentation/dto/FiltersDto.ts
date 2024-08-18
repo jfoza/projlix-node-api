@@ -8,7 +8,11 @@ export class FiltersDto {
   @IsIn(['ASC', 'DESC'], {
     message: ErrorMessagesEnum.INVALID_COLUMN_ORDER,
   })
-  @Transform(({ value }) => value?.toUpperCase(), { toClassOnly: true })
+  @Transform(
+    ({ value }) =>
+      value && typeof value === 'string' ? value.toUpperCase() : undefined,
+    { toClassOnly: true },
+  )
   columnOrder: 'ASC' | 'DESC' = 'DESC';
 
   page: number | null = null;

@@ -10,36 +10,46 @@ import {
   Min,
 } from 'class-validator';
 import { FiltersDto } from '@/common/presentation/dto/FiltersDto';
-import { Type } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
 import { ErrorMessagesEnum } from '@/common/enums/error-messages.enum';
 
 export class TeamUserFiltersDto extends FiltersDto {
   @IsOptional()
   @IsString()
+  @Transform(({ value }) => (value === '' ? undefined : value))
   name?: string;
 
   @IsOptional()
   @IsEmail()
+  @Transform(({ value }) => (value === '' ? undefined : value))
   email?: string;
 
   @IsOptional()
   @IsString()
+  @Transform(({ value }) => (value === '' ? undefined : value))
   nameOrEmail?: string;
 
   @IsOptional()
   @IsString()
+  @Transform(({ value }) => (value === '' ? undefined : value))
   profileId?: string;
 
   @IsOptional()
-  @IsBoolean()
+  @Transform(({ value }) => {
+    if (value === 'true') return true;
+    if (value === 'false') return false;
+    return undefined;
+  })
   active?: boolean;
 
   @IsOptional()
   @IsArray()
+  @Transform(({ value }) => (value === '' ? undefined : value))
   projectsId?: string[];
 
   @IsOptional()
   @IsArray()
+  @Transform(({ value }) => (value === '' ? undefined : value))
   profilesUniqueName?: string[];
 
   @Type(() => Number)
@@ -49,8 +59,9 @@ export class TeamUserFiltersDto extends FiltersDto {
   page: number;
 
   @IsOptional()
-  @IsIn(['name', 'email'], {
+  @IsIn(['name', 'email', 'active'], {
     message: ErrorMessagesEnum.INVALID_COLUMN_NAME,
   })
+  @Transform(({ value }) => (value === '' ? undefined : value))
   columnName: string | null = null;
 }

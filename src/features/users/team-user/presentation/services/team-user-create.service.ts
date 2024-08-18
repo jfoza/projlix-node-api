@@ -17,6 +17,8 @@ import { IProjectRepository } from '@/features/projects/project/interfaces/repos
 import { ProjectValidations } from '@/features/projects/project/application/validations/project.validations';
 import { ITeamUserEntity } from '@/features/users/team-user/interfaces/entities/team-user.entity.interface';
 import { IProfileEntity } from '@/features/users/profiles/interfaces/entities/profile.entity.interface';
+import { IProjectEntity } from '@/features/projects/project/interfaces/entities/project.entity.interface';
+import { Helper } from '@/common/helpers';
 
 @Injectable()
 export class TeamUserCreateService
@@ -24,6 +26,7 @@ export class TeamUserCreateService
   implements ITeamUserCreateService
 {
   private createTeamUserDto: CreateTeamUserDto;
+  private projects: IProjectEntity[];
 
   @Inject('IUserCreateUseCase')
   private readonly userCreateUseCase: IUserCreateUseCase;
@@ -71,14 +74,15 @@ export class TeamUserCreateService
     );
 
     await this.defineProjectsRelation();
+    await this.canAccessEachProject(Helper.pluck(this.projects, 'id'));
 
     return await this.createTeamUser();
   }
 
   async createByTeamLeader(): Promise<IUserEntity> {
     await this.handleValidations(ProfileUniqueNameEnum.PROFILES_BY_TEAM_LEADER);
-
     await this.defineProjectsRelation();
+    await this.canAccessEachProject(Helper.pluck(this.projects, 'id'));
 
     return await this.createTeamUser();
   }
@@ -98,7 +102,7 @@ export class TeamUserCreateService
 
   async defineProjectsRelation(): Promise<void> {
     if (this.createTeamUserDto.projects.length > 0) {
-      await ProjectValidations.projectsExists(
+      this.projects = await ProjectValidations.projectsExists(
         this.createTeamUserDto.projects,
         this.projectRepository,
       );
@@ -120,7 +124,7 @@ export class TeamUserCreateService
       userCreated.id,
     );
 
-    await this.teamUserRepository.createProjectsRelation(
+    await this.teamUserRepository.saveProjectsRelation(
       teamUser,
       this.createTeamUserDto.projects,
     );

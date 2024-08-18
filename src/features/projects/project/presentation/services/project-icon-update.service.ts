@@ -6,8 +6,8 @@ import { IProjectEntity } from '@/features/projects/project/interfaces/entities/
 import { IProjectRepository } from '@/features/projects/project/interfaces/repositories/project.repository.interface';
 import { IIconRepository } from '@/features/general/icons/interfaces/repositories/icon.repository.interface';
 import { RulesEnum } from '@/common/enums/rules.enum';
-import { ProjectValidations } from '@/features/projects/project/application/validations/project.validations';
 import { IconValidations } from '@/features/general/icons/application/validations/icon.validations';
+import { IProjectListByIdUseCase } from '@/features/projects/project/interfaces/use-cases/project-list-by-id.use-case.interface';
 
 @Injectable()
 export class ProjectIconUpdateService
@@ -16,6 +16,9 @@ export class ProjectIconUpdateService
 {
   private id: string;
   private projectIconDto: ProjectIconDto;
+
+  @Inject('IProjectListByIdUseCase')
+  private readonly projectListByIdUseCase: IProjectListByIdUseCase;
 
   @Inject('IProjectRepository')
   private readonly projectRepository: IProjectRepository;
@@ -63,10 +66,13 @@ export class ProjectIconUpdateService
   }
 
   private async handleValidations(): Promise<void> {
-    await ProjectValidations.projectExists(this.id, this.projectRepository);
+    await this.projectListByIdUseCase
+      .setId(this.id)
+      .setRelations(['tags'])
+      .execute();
 
     await IconValidations.iconExists(
-      this.projectIconDto.icon_id,
+      this.projectIconDto.iconId,
       this.iconRepository,
     );
   }

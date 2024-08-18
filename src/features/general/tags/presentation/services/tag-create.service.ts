@@ -20,10 +20,10 @@ export class TagCreateService extends Service implements ITagCreateService {
     this.getPolicy().can(RulesEnum.TAGS_INSERT);
 
     await ColorValidations.colorExists(
-      createTagDto.color_id,
+      createTagDto.color,
       this.colorRepository,
     );
 
-    return await this.tagRepository.crate(createTagDto);
+    return await this.tagRepository.create(createTagDto);
   }
 }

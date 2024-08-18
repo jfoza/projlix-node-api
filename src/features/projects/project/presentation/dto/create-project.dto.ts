@@ -1,8 +1,8 @@
 import { IsNotEmpty, IsString } from 'class-validator';
 
 export class CreateProjectDto {
-  icon_id: string;
-  unique_name?: string;
+  iconId: string;
+  uniqueName?: string;
 
   @IsNotEmpty()
   @IsString()

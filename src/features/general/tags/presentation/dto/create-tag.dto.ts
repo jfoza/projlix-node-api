@@ -4,7 +4,7 @@ export class CreateTagDto {
   @IsOptional()
   @IsString()
   @IsUUID()
-  color_id?: string;
+  color?: string;
 
   @IsNotEmpty()
   @IsString()

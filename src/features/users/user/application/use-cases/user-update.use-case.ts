@@ -87,4 +87,8 @@ export class UserUpdateUseCase implements IUserUpdateUseCase {
 
     return { id: this.id, active: newStatus };
   }
+
+  getUser(): IUserEntity {
+    return this.user;
+  }
 }

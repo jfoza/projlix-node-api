@@ -5,9 +5,9 @@ import { ProjectTagDto } from '@/features/projects/project/presentation/dto/proj
 import { IProjectRepository } from '@/features/projects/project/interfaces/repositories/project.repository.interface';
 import { ITagRepository } from '@/features/general/tags/interfaces/repositories/tag.repository.interface';
 import { RulesEnum } from '@/common/enums/rules.enum';
-import { ProjectValidations } from '@/features/projects/project/application/validations/project.validations';
 import { TagValidations } from '@/features/general/tags/application/validations/tag.validations';
 import { IProjectEntity } from '@/features/projects/project/interfaces/entities/project.entity.interface';
+import { IProjectListByIdUseCase } from '@/features/projects/project/interfaces/use-cases/project-list-by-id.use-case.interface';
 
 @Injectable()
 export class ProjectTagRemoveService
@@ -22,6 +22,9 @@ export class ProjectTagRemoveService
 
   @Inject('ITagRepository')
   private readonly tagRepository: ITagRepository;
+
+  @Inject('IProjectListByIdUseCase')
+  private readonly projectListByIdUseCase: IProjectListByIdUseCase;
 
   async handle(projectTagDto: ProjectTagDto): Promise<void> {
     this.projectTagDto = projectTagDto;
@@ -56,20 +59,19 @@ export class ProjectTagRemoveService
   }
 
   private async handleValidations(): Promise<void> {
-    this.project = await ProjectValidations.projectExists(
-      this.projectTagDto.project_id,
-      this.projectRepository,
-    );
+    this.project = await this.projectListByIdUseCase
+      .setId(this.projectTagDto.projectId)
+      .execute();
 
     await TagValidations.tagExists(
-      this.projectTagDto.tag_id,
+      this.projectTagDto.tagId,
       this.tagRepository,
     );
   }
 
   private async removeTagRelation(): Promise<void> {
     const tagHasAlreadyAdded = this.project.tags.some(
-      (item) => item.id === this.projectTagDto.tag_id,
+      (item) => item.id === this.projectTagDto.tagId,
     );
 
     if (tagHasAlreadyAdded) {

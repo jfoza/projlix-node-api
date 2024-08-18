@@ -31,7 +31,7 @@ export class ProjectUpdateController {
     return await this.projectInfoUpdateService.handle(id, projectInfoUpdateDto);
   }
 
-  @Put(':id/icon')
+  @Put(':id/icons')
   async updateIcon(
     @Param('id', new ParseUUIDPipe()) id: string,
     @Body() projectIconDto: ProjectIconDto,

@@ -8,8 +8,8 @@ import { IProjectRepository } from '@/features/projects/project/interfaces/repos
 import { ITeamUserRepository } from '@/features/users/team-user/interfaces/repositories/team-user.repository.interface';
 import { RulesEnum } from '@/common/enums/rules.enum';
 import { ProfileUniqueNameEnum } from '@/common/enums/profile-unique-name.enum';
-import { ProjectValidations } from '@/features/projects/project/application/validations/project.validations';
 import { TeamUserValidations } from '@/features/users/team-user/application/validations/team-user.validations';
+import { IProjectListByIdUseCase } from '@/features/projects/project/interfaces/use-cases/project-list-by-id.use-case.interface';
 
 @Injectable()
 export class ProjectTeamUserRemoveService
@@ -25,6 +25,9 @@ export class ProjectTeamUserRemoveService
 
   @Inject('ITeamUserRepository')
   private readonly teamUserRepository: ITeamUserRepository;
+
+  @Inject('IProjectListByIdUseCase')
+  private readonly projectListByIdUseCase: IProjectListByIdUseCase;
 
   handle(projectTeamUserDto: ProjectTeamUserDto): Promise<void> {
     this.projectTeamUserDto = projectTeamUserDto;
@@ -79,13 +82,13 @@ export class ProjectTeamUserRemoveService
   }
 
   private async handleValidations(): Promise<void> {
-    this.project = await ProjectValidations.projectExists(
-      this.projectTeamUserDto.project_id,
-      this.projectRepository,
-    );
+    this.project = await this.projectListByIdUseCase
+      .setId(this.projectTeamUserDto.projectId)
+      .setRelations(['team_users'])
+      .execute();
 
     this.user = await TeamUserValidations.teamUserExists(
-      this.projectTeamUserDto.team_user_id,
+      this.projectTeamUserDto.teamUserId,
       this.teamUserRepository,
     );
   }

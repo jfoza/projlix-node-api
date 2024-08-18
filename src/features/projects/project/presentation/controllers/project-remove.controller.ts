@@ -44,10 +44,10 @@ export class ProjectRemoveController {
   @Delete(':id/tags')
   async removeTag(
     @Param('id', new ParseUUIDPipe()) id: string,
-    @Query('tag_id', new ParseUUIDPipe()) tag_id: string,
+    @Query('tagId', new ParseUUIDPipe()) tagId: string,
   ): Promise<void> {
-    this.projectTagDto.project_id = id;
-    this.projectTagDto.tag_id = tag_id;
+    this.projectTagDto.projectId = id;
+    this.projectTagDto.tagId = tagId;
 
     await this.projectTagRemoveService.handle(this.projectTagDto);
   }
@@ -56,10 +56,10 @@ export class ProjectRemoveController {
   @Delete(':id/team-users')
   async removeTeamUser(
     @Param('id', new ParseUUIDPipe()) id: string,
-    @Query('team_user_id', new ParseUUIDPipe()) team_user_id: string,
+    @Query('teamUserId', new ParseUUIDPipe()) teamUserId: string,
   ): Promise<void> {
-    this.projectTeamUserDto.project_id = id;
-    this.projectTeamUserDto.team_user_id = team_user_id;
+    this.projectTeamUserDto.projectId = id;
+    this.projectTeamUserDto.teamUserId = teamUserId;
 
     await this.projectTeamUserRemoveService.handle(this.projectTeamUserDto);
   }

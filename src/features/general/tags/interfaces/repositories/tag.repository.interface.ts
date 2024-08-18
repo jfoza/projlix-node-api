@@ -9,7 +9,8 @@ export interface ITagRepository {
     tagFiltersDto: TagFiltersDto,
   ): Promise<ITagEntity[] | ILengthAwarePaginator>;
   findById(id: string): Promise<ITagEntity>;
-  crate(createTagDto: CreateTagDto): Promise<ITagEntity>;
+  create(createTagDto: CreateTagDto): Promise<ITagEntity>;
   update(id: string, updateTagDto: UpdateTagDto): Promise<ITagEntity>;
+  updateStatus(tagId: string, newStatus: boolean): Promise<void>;
   remove(id: string): Promise<void>;
 }

@@ -3,7 +3,6 @@ import { UpdateTeamUserDto } from '@/features/users/team-user/presentation/dto/u
 import { IUserEntity } from '@/features/users/user/interfaces/entities/user-entity.interface';
 import { Inject, Injectable } from '@nestjs/common';
 import { Service } from '@/common/presentation/services/service';
-import { ITeamUserRepository } from '@/features/users/team-user/interfaces/repositories/team-user.repository.interface';
 import { IProfileRepository } from '@/features/users/profiles/interfaces/repositories/profile.repository.interface';
 import { Policy } from '@/acl/types/policy';
 import { RulesEnum } from '@/common/enums/rules.enum';
@@ -13,6 +12,11 @@ import { IUserUpdateUseCase } from '@/features/users/user/interfaces/use-cases/u
 import { UserTypesEnum } from '@/common/enums/user-types.enum';
 import { ProfileUniqueNameEnum } from '@/common/enums/profile-unique-name.enum';
 import { IProfileEntity } from '@/features/users/profiles/interfaces/entities/profile.entity.interface';
+import { ProjectValidations } from '@/features/projects/project/application/validations/project.validations';
+import { IProjectRepository } from '@/features/projects/project/interfaces/repositories/project.repository.interface';
+import { Helper } from '@/common/helpers';
+import { ITeamUserRepository } from '@/features/users/team-user/interfaces/repositories/team-user.repository.interface';
+import { IProjectEntity } from '@/features/projects/project/interfaces/entities/project.entity.interface';
 
 @Injectable()
 export class TeamUserUpdateService
@@ -27,6 +31,12 @@ export class TeamUserUpdateService
 
   @Inject('IProfileRepository')
   private readonly profileRepository: IProfileRepository;
+
+  @Inject('IProjectRepository')
+  private readonly projectRepository: IProjectRepository;
+
+  @Inject('ITeamUserRepository')
+  private readonly teamUserRepository: ITeamUserRepository;
 
   async handle(
     id: string,
@@ -53,23 +63,25 @@ export class TeamUserUpdateService
   }
 
   private async updateByAdminMaster(): Promise<IUserEntity> {
-    const profiles = ProfileUniqueNameEnum.PROFILES_BY_TEAM_LEADER;
+    const profiles = ProfileUniqueNameEnum.PROFILES_BY_ADMIN_MASTER;
 
     await this.userExistsAndCanBeAccessed(profiles);
     await this.profileExistsAndCanBeUsed(profiles);
     await this.userUpdateUseCase.userEmailExists();
+    await this.projectsExists();
 
-    return await this.userUpdateUseCase.update();
+    return await this.update();
   }
 
   private async updateByProjectManager(): Promise<IUserEntity> {
-    const profiles = ProfileUniqueNameEnum.PROFILES_BY_TEAM_LEADER;
+    const profiles = ProfileUniqueNameEnum.PROFILES_BY_PROJECT_MANAGER;
 
     await this.userExistsAndCanBeAccessed(profiles);
     await this.profileExistsAndCanBeUsed(profiles);
     await this.userUpdateUseCase.userEmailExists();
+    await this.projectsExistsAndCanBeUsed();
 
-    return await this.userUpdateUseCase.update();
+    return await this.update();
   }
 
   private async updateByTeamLeader(): Promise<IUserEntity> {
@@ -78,11 +90,12 @@ export class TeamUserUpdateService
     await this.userExistsAndCanBeAccessed(profiles);
     await this.profileExistsAndCanBeUsed(profiles);
     await this.userUpdateUseCase.userEmailExists();
+    await this.projectsExistsAndCanBeUsed();
 
-    return await this.userUpdateUseCase.update();
+    return await this.update();
   }
 
-  async userExistsAndCanBeAccessed(profiles: string[]): Promise<void> {
+  private async userExistsAndCanBeAccessed(profiles: string[]): Promise<void> {
     this.userUpdateUseCase.setId(this.id);
     this.userUpdateUseCase.setUserType(UserTypesEnum.OPERATIONAL);
     this.userUpdateUseCase.setUpdateUserDto(this.updateTeamUserDto);
@@ -92,7 +105,7 @@ export class TeamUserUpdateService
     this.profileHierarchyValidation(user.profile.unique_name, profiles);
   }
 
-  async profileExistsAndCanBeUsed(profiles: string[]): Promise<void> {
+  private async profileExistsAndCanBeUsed(profiles: string[]): Promise<void> {
     const profile: IProfileEntity = await ProfileValidations.profileExists(
       this.updateTeamUserDto.profile,
       this.profileRepository,
@@ -103,5 +116,42 @@ export class TeamUserUpdateService
       profiles,
       ErrorMessagesEnum.PROFILE_NOT_ALLOWED,
     );
+  }
+
+  private async projectsExists(): Promise<void> {
+    if (this.updateTeamUserDto.projects.length > 0) {
+      await ProjectValidations.projectsExists(
+        this.updateTeamUserDto.projects,
+        this.projectRepository,
+      );
+    }
+  }
+
+  private async projectsExistsAndCanBeUsed() {
+    if (this.updateTeamUserDto.projects.length > 0) {
+      const projects = await ProjectValidations.projectsExists(
+        this.updateTeamUserDto.projects,
+        this.projectRepository,
+      );
+
+      await this.canAccessEachProject(Helper.pluck(projects, 'id'));
+    } else {
+      this.updateTeamUserDto.projects = await this.getTeamUserProjectsId();
+    }
+  }
+
+  private async update(): Promise<IUserEntity> {
+    const user = await this.userUpdateUseCase.update();
+
+    if (this.updateTeamUserDto.projects.length > 0) {
+      const teamUser = this.userUpdateUseCase.getUser().team_user;
+
+      await this.teamUserRepository.saveProjectsRelation(
+        teamUser,
+        this.updateTeamUserDto.projects,
+      );
+    }
+
+    return user;
   }
 }

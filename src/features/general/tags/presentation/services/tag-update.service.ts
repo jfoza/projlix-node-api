@@ -23,7 +23,7 @@ export class TagUpdateService extends Service implements ITagUpdateService {
     await TagValidations.tagExists(id, this.tagRepository);
 
     await ColorValidations.colorExists(
-      updateTagDto.color_id,
+      updateTagDto.color,
       this.colorRepository,
     );
 

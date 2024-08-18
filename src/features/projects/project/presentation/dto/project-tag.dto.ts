@@ -6,10 +6,10 @@ export class ProjectTagDto {
   @IsNotEmpty()
   @IsString()
   @IsUUID()
-  project_id: string;
+  projectId: string;
 
   @IsNotEmpty()
   @IsString()
   @IsUUID()
-  tag_id: string;
+  tagId: string;
 }

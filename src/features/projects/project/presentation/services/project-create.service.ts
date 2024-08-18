@@ -74,8 +74,8 @@ export class ProjectCreateService
   private async handlePopulateDefaultData(): Promise<void> {
     const icon = await this.iconRepository.findByName('AnchorIcon');
 
-    this.createProjectDto.icon_id = icon.id;
-    this.createProjectDto.unique_name = Helper.stringUniqueName(
+    this.createProjectDto.iconId = icon.id;
+    this.createProjectDto.uniqueName = Helper.stringUniqueName(
       this.createProjectDto.name,
     );
   }
@@ -85,8 +85,6 @@ export class ProjectCreateService
   ): Promise<void> {
     const teamUser = await this.getTeamUser();
 
-    await this.teamUserRepository.createProjectsRelation(teamUser, [
-      project.id,
-    ]);
+    await this.teamUserRepository.saveProjectsRelation(teamUser, [project.id]);
   }
 }

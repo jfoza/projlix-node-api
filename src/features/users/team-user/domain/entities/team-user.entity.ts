@@ -27,6 +27,9 @@ export class TeamUserEntity implements ITeamUserEntity {
   @UpdateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   updated_at: Date;
 
+  @Column({ type: 'boolean', default: true })
+  can: boolean;
+
   @OneToOne(() => UserEntity, (user) => user.team_user)
   @JoinColumn({ name: 'user_id' })
   user: UserEntity;

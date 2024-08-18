@@ -8,16 +8,18 @@ import {
   Min,
 } from 'class-validator';
 import { FiltersDto } from '@/common/presentation/dto/FiltersDto';
-import { Type } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
 import { ErrorMessagesEnum } from '@/common/enums/error-messages.enum';
 
 export class AdminUserFiltersDto extends FiltersDto {
   @IsOptional()
   @IsString()
+  @Transform(({ value }) => (value === '' ? undefined : value))
   name?: string;
 
   @IsOptional()
   @IsEmail()
+  @Transform(({ value }) => (value === '' ? undefined : value))
   email?: string;
 
   @Type(() => Number)
@@ -27,8 +29,9 @@ export class AdminUserFiltersDto extends FiltersDto {
   page: number;
 
   @IsOptional()
-  @IsIn(['name', 'email'], {
+  @IsIn(['name', 'email', 'created_at'], {
     message: ErrorMessagesEnum.INVALID_COLUMN_NAME,
   })
+  @Transform(({ value }) => (value === '' ? undefined : value))
   columnName: string | null = null;
 }

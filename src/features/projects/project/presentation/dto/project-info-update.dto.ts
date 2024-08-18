@@ -9,5 +9,5 @@ export class ProjectInfoUpdateDto {
   @IsString()
   description?: string;
 
-  unique_name?: string;
+  uniqueName?: string;
 }

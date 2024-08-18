@@ -5,6 +5,7 @@ import { ProfileTypesEntity } from '@/features/users/profiles/domain/entities/pr
 import { UserEntity } from '@/features/users/user/domain/entities/user.entity';
 import { RuleModule } from '@/features/users/rule/modules/rule.module';
 import { profileProviders } from '@/features/users/profiles/modules/profile.providers';
+import { ProfileController } from '@/features/users/profiles/presentation/controllers/profile.controller';
 
 @Global()
 @Module({
@@ -12,6 +13,7 @@ import { profileProviders } from '@/features/users/profiles/modules/profile.prov
     TypeOrmModule.forFeature([ProfileEntity, ProfileTypesEntity, UserEntity]),
     forwardRef(() => RuleModule),
   ],
+  controllers: [ProfileController],
   providers: [...profileProviders.register()],
   exports: [...profileProviders.exports()],
 })
