@@ -8,6 +8,7 @@ import {
 } from 'typeorm';
 import { IColorEntity } from '@/features/general/colors/interfaces/entities/color.entity.interface';
 import { TagEntity } from '@/features/general/tags/domain/entities/tag.entity';
+import { SectionEntity } from '@/features/projects/section/domain/entities/section.entity';
 
 @Entity({ schema: 'general', name: 'colors' })
 export class ColorEntity implements IColorEntity {
@@ -31,4 +32,7 @@ export class ColorEntity implements IColorEntity {
 
   @OneToMany(() => TagEntity, (tag) => tag.color)
   tags: TagEntity[];
+
+  @OneToMany(() => SectionEntity, (section) => section.color_id)
+  sections: SectionEntity[];
 }

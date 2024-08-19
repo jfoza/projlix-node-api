@@ -13,6 +13,7 @@ import { ProjectRemoveService } from '@/features/projects/project/presentation/s
 import { ProjectTagRemoveService } from '@/features/projects/project/presentation/services/project-tag-remove.service';
 import { ProjectTeamUserRemoveService } from '@/features/projects/project/presentation/services/project-team-user-remove.service';
 import { ProjectListByIdUseCase } from '@/features/projects/project/application/use-cases/project-list-by-id.use-case';
+import { ProjectListByUniqueNameUseCase } from '@/features/projects/project/application/use-cases/project-list-by-unique-name.use-case';
 
 export const projectProviders: ProvidersType = {
   repositoryProviders: [
@@ -73,10 +74,20 @@ export const projectProviders: ProvidersType = {
       provide: 'IProjectListByIdUseCase',
       useExisting: ProjectListByIdUseCase,
     },
+
+    ProjectListByUniqueNameUseCase,
+    {
+      provide: 'IProjectListByUniqueNameUseCase',
+      useExisting: ProjectListByUniqueNameUseCase,
+    },
   ],
 
   exports(): string[] {
-    return ['IProjectRepository'];
+    return [
+      'IProjectRepository',
+      'IProjectListByIdUseCase',
+      'IProjectListByUniqueNameUseCase',
+    ];
   },
 
   register(): Provider[] {

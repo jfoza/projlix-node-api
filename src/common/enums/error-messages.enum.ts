@@ -21,4 +21,8 @@ export enum ErrorMessagesEnum {
   PROJECT_NOT_FOUND = 'Projeto não encontrado.',
   PROJECT_NOT_ALLOWED = 'Você não tem acesso a este projeto.',
   PROJECT_NOT_ALLOWED_IN_TEAM_USERS = 'Você não tem acesso aos membros deste projeto.',
+  PROJECT_ID_OR_PROJECT_UNIQUE_NAME_REQUIRED = 'Ao menos um dos parâmetros: projectId ou projectUniqueName deve ser informado.',
+
+  SECTION_NOT_FOUND = 'Seção não encontrada.',
+  SECTION_NOT_ALLOWED = 'Você não tem acesso a esta seção.',
 }

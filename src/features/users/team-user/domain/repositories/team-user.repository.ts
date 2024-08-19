@@ -18,25 +18,6 @@ export class TeamUserRepository implements ITeamUserRepository {
   @InjectRepository(TeamUserEntity)
   private readonly teamUserRepository: Repository<TeamUserEntity>;
 
-  async create(userId: string): Promise<ITeamUserEntity> {
-    const teamUser: TeamUserEntity = this.teamUserRepository.create({
-      user_id: userId,
-    });
-
-    return await this.teamUserRepository.save(teamUser);
-  }
-
-  async saveProjectsRelation(
-    savedTeamUser: ITeamUserEntity,
-    projectsId: string[],
-  ): Promise<void> {
-    await this.teamUserRepository
-      .createQueryBuilder()
-      .relation(TeamUserEntity, 'projects')
-      .of(savedTeamUser.id)
-      .add(projectsId);
-  }
-
   async findAll(
     teamUserFiltersDto: TeamUserFiltersDto,
   ): Promise<ILengthAwarePaginator> {
@@ -93,6 +74,25 @@ export class TeamUserRepository implements ITeamUserRepository {
       .innerJoinAndSelect('user.team_user', 'team_user')
       .innerJoinAndSelect('user.profile', 'profile')
       .leftJoinAndSelect('team_user.projects', 'projects');
+  }
+
+  async create(userId: string): Promise<ITeamUserEntity> {
+    const teamUser: TeamUserEntity = this.teamUserRepository.create({
+      user_id: userId,
+    });
+
+    return await this.teamUserRepository.save(teamUser);
+  }
+
+  async saveProjectsRelation(
+    savedTeamUser: ITeamUserEntity,
+    projectsId: string[],
+  ): Promise<void> {
+    await this.teamUserRepository
+      .createQueryBuilder()
+      .relation(TeamUserEntity, 'projects')
+      .of(savedTeamUser.id)
+      .add(projectsId);
   }
 
   private getBaseQueryFilters(

@@ -4,6 +4,19 @@ import { ErrorMessagesEnum } from '@/common/enums/error-messages.enum';
 import { IProjectEntity } from '@/features/projects/project/interfaces/entities/project.entity.interface';
 
 export class ProjectValidations {
+  static async projectExistsById(
+    id: string,
+    projectRepository: IProjectRepository,
+  ): Promise<IProjectEntity> {
+    const project: IProjectEntity = await projectRepository.findById(id, []);
+
+    if (!project) {
+      throw new NotFoundException(ErrorMessagesEnum.PROJECT_NOT_FOUND);
+    }
+
+    return project;
+  }
+
   static async projectsExists(
     projectsId: string[],
     projectRepository: IProjectRepository,
@@ -20,6 +33,22 @@ export class ProjectValidations {
     }
 
     return projects;
+  }
+
+  static async projectExistsByUniqueName(
+    uniqueName: string,
+    projectRepository: IProjectRepository,
+  ): Promise<IProjectEntity> {
+    const project: IProjectEntity = await projectRepository.findByUniqueName(
+      uniqueName,
+      [],
+    );
+
+    if (!project) {
+      throw new NotFoundException(ErrorMessagesEnum.PROJECT_NOT_FOUND);
+    }
+
+    return project;
   }
 
   static async projectExistsByName(

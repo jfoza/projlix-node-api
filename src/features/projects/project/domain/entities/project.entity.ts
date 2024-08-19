@@ -7,12 +7,14 @@ import {
   JoinTable,
   ManyToMany,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { IconEntity } from '@/features/general/icons/domain/entities/icon.entity';
 import { TagEntity } from '@/features/general/tags/domain/entities/tag.entity';
 import { TeamUserEntity } from '@/features/users/team-user/domain/entities/team-user.entity';
+import { SectionEntity } from '@/features/projects/section/domain/entities/section.entity';
 
 @Entity({ schema: 'project', name: 'projects' })
 export class ProjectEntity implements IProjectEntity {
@@ -43,6 +45,9 @@ export class ProjectEntity implements IProjectEntity {
   @ManyToOne(() => IconEntity, (icon) => icon.projects)
   @JoinColumn({ name: 'icon_id' })
   icon: IconEntity;
+
+  @OneToMany(() => SectionEntity, (section) => section.project_id)
+  sections: SectionEntity[];
 
   @JoinTable({
     schema: 'project',

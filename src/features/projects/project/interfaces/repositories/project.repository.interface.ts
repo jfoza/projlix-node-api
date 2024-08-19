@@ -15,7 +15,10 @@ export interface IProjectRepository {
   findByIds(ids: string[]): Promise<IProjectEntity[]>;
   findById(id: string, relations: string[]): Promise<IProjectEntity>;
   findByName(name: string): Promise<IProjectEntity>;
-  findByUniqueName(uniqueName: string): Promise<IProjectEntity>;
+  findByUniqueName(
+    uniqueName: string,
+    relations: string[],
+  ): Promise<IProjectEntity>;
   create(createProjectDto: CreateProjectDto): Promise<IProjectEntity>;
   saveTagsRelation(project: IProjectEntity, tagsId: string[]): Promise<void>;
   updateInfo(

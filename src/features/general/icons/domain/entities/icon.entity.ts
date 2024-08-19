@@ -8,6 +8,7 @@ import {
 } from 'typeorm';
 import { IIconEntity } from '@/features/general/icons/interfaces/entities/icon.entity.interface';
 import { ProjectEntity } from '@/features/projects/project/domain/entities/project.entity';
+import { SectionEntity } from '@/features/projects/section/domain/entities/section.entity';
 
 @Entity({ schema: 'general', name: 'icons' })
 export class IconEntity implements IIconEntity {
@@ -28,4 +29,7 @@ export class IconEntity implements IIconEntity {
 
   @OneToMany(() => ProjectEntity, (project) => project.icon)
   projects: ProjectEntity[];
+
+  @OneToMany(() => SectionEntity, (section) => section.icon_id)
+  sections: SectionEntity[];
 }

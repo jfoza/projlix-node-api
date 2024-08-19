@@ -67,9 +67,13 @@ export class ProjectRepository implements IProjectRepository {
     });
   }
 
-  async findByUniqueName(uniqueName: string): Promise<IProjectEntity> {
+  async findByUniqueName(
+    uniqueName: string,
+    relations: string[] = [],
+  ): Promise<IProjectEntity> {
     return await this.repository.findOne({
       where: { unique_name: uniqueName },
+      relations,
     });
   }
 

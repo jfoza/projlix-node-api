@@ -58,10 +58,10 @@ DO $$
             (_team_user1, _project2),
             (_team_user2, _project2);
 
---         INSERT INTO project.sections(project_id, color_id, icon_id, name)
---         VALUES (_project1, _tag_color_id1, _project_icon_id1, 'Backlog'),
---                (_project1, _tag_color_id2, _project_icon_id2, 'Em Desenvolvimento'),
---                (_project1, _tag_color_id3, _project_icon_id1, 'Auditoria');
+        INSERT INTO project.sections(project_id, color_id, icon_id, name)
+        VALUES (_project1, _tag_color_id1, _project_icon_id1, 'Backlog'),
+               (_project1, _tag_color_id2, _project_icon_id2, 'Em Desenvolvimento'),
+               (_project1, _tag_color_id3, _project_icon_id1, 'Auditoria');
 
         INSERT INTO project.projects_tags(project_id, tag_id)
         VALUES (_project1, _tag1),
